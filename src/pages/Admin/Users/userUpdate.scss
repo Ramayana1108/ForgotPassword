@@ -1,0 +1,171 @@
+//Change color ng error message to red
+// .PassError {
+//   color:#c4391d !important;
+// }
+
+@media screen and (min-width: 991px) {
+    .registerTitle {
+        color: black;
+        align-items: center;
+        text-align: center;
+        padding-top: 40px;
+        display: flex;
+        justify-content: center;
+        
+        }
+    .Auth-form-container-upd {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10%;
+        margin-bottom: 10%;
+        width: 100vw;
+        height: 50vh;
+        }
+  .edituser-btn-add {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center; 
+  }
+}
+  
+@media screen and (max-width: 990px) {
+    .registerTitle{
+        color: black;
+        align-items: center;
+        text-align: center;
+        padding-top: 40px;
+        display: flex;
+        justify-content: center;
+        }
+        .Auth-form-container-upd {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-top: 10%;
+          margin-bottom: 10%;
+          width: 100vw;
+          height: 65vh;
+          }
+
+  .newuser-btn-add {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly !important;
+    flex-direction: row;
+    align-items: center; 
+  }
+    }
+  
+  .Login {
+      background-color: white;
+    }
+  
+  .right {
+    text-align: end;
+    padding-top: 1%;
+  }
+  
+  
+  .Auth-form-upd {
+    width: 650px;
+    height: auto;
+    color: black;
+    border-width: 1px;
+    border-color: #668d3c;
+    border-style: solid;
+    padding-top: 30px;
+    padding-bottom: 40px;
+    border-radius: 20px;
+    background-color: white;
+  }
+  
+  .Auth-form-content-upd {
+    
+    padding-left: 12%;
+    padding-right: 12%;
+  }
+  
+  
+  .Auth-form-title-add {
+    text-align: center;
+    margin-bottom: 1em;
+    font-size: 24px;
+    color: rgb(34, 34, 34);
+    font-weight: 800;
+  }
+  
+  label {
+    text-align: left;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgb(34, 34, 34);
+  }
+  
+  .d-grid-add {
+    padding-top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+  }
+  
+  .d-grid-add a {
+    font-size: 12px;
+    position: center;
+  }
+  
+  .login-btn-add {
+    width: 100%;
+    display: flex;
+    padding-top: 20px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    
+  }
+  
+  .login-btn-add {
+    width: 100%;
+    display: flex;
+    padding-top: 20px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    
+  }
+  
+  .btn-primary-add {
+    padding: 5px 50px;
+    border-color: #668d3c;
+    background-color: white;
+    border-radius: 10px;
+    color: #668d3c;
+
+  }
+  
+  .btn-primary-cancel {
+    padding: 5px 50px;
+    border-color: #c4391d;
+    background-color: white;
+    border-radius: 10px;
+    color: #c4391d;
+    }
+  
+  .btn-primary-add:hover {
+    background-color: #668d3c;
+    border-color: #668d3c;
+    color: white;
+  }
+  
+  .btn-primary-cancel:hover {
+      background-color: #c4391d;
+      border-color: #c4391d;
+      color: white;
+    }
+  .error-text{
+      color:#c4391d;
+    
+    }
+  

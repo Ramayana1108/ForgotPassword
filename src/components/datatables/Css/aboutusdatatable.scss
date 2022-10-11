@@ -1,0 +1,31 @@
+.datatable {
+    height: 600px;
+    padding: 20px;
+    
+    .datatableTitle{
+      width: 100%;
+      font-size: 24px;
+      color: gray;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+    }
+    .cellAction {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+  }
+  
+    .MuiDataGrid-root .MuiDataGrid-cell{
+      white-space: normal !important;
+      word-wrap: break-word !important;
+      text-align: justify;
+      }
+    .datagrid{
+      padding-top: 1%;
+    }
+  
+   

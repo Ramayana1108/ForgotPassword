@@ -1,0 +1,48 @@
+.datatable {
+    height: 400px;
+    padding: 20px;
+    
+    .datatableTitle{
+      width: 100%;
+      font-size: 24px;
+      color: gray;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+  
+      .updateButton {
+        background-color: #FFFFFF;
+        color: #145da0 !important;
+        border-color: #145da0 !important;
+        &:hover {
+           background-color: #145da0;;
+           color: #FFFFFF !important;
+     }
+     }
+     
+     .deleteButton {
+        background-color: #FFFFFF;
+        color: #c4391d !important;
+        border-color: #c4391d !important;
+        &:hover {
+           background-color: #c4391d !important;
+           color: #FFFFFF !important;
+        }
+     }
+     
+     .link {
+        border-color: #668d3c !important;
+        &:hover {
+           background-color: #668d3c;
+           color: #FFFFFF !important;
+        }
+     }
+
+    .cellAction {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+  }
+}
+}

@@ -1,0 +1,107 @@
+// @font-face {
+//     font-family: 'glacial_indifferenceregular';
+//     src: url('fontsfree-net-glacialindifference-regular-webfont.woff') format('woff');
+//     font-weight: normal;
+//     font-style: normal;
+// }
+
+.Login {
+    background-color: white;
+  }
+
+.passwordError{
+  color:#c4391d;
+}
+
+.usernameError{
+  color:#c4391d;
+}
+
+.center {
+  text-align: center;
+}
+
+.Auth-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.Auth-form {
+  width: 420px;
+  color: black;
+  border-width: 1px;
+  border-color: #668d3c;
+  border-style: solid;
+  padding-top: 30px;
+  padding-bottom: 40px;
+  border-radius: 20px;
+  background-color: white;
+}
+
+.Auth-form-content {
+  
+  padding-left: 12%;
+  padding-right: 12%;
+}
+
+.loginLogo {
+  max-width: 50%;
+  height: auto;
+  padding: 0;
+}
+
+.Auth-form-title {
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 24px;
+  color: rgb(34, 34, 34);
+  font-weight: 800;
+}
+
+label {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(34, 34, 34);
+}
+
+.d-grid {
+  padding-top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+.d-grid a {
+  font-size: 12px;
+  position: center;
+}
+
+.login-btn {
+  width: 100%;
+  display: flex;
+  padding-top: 0;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-primary {
+  display: flex;
+  width: 40%;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 50px;
+  border-color: #668d3c;
+  background-color: white;
+  border-radius: 10px;
+  color: #668d3c;
+}
+
+.btn-primary:hover {
+  background-color: #668d3c;
+  border-color: #668d3c;
+}

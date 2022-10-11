@@ -1,0 +1,120 @@
+@media screen and (min-width: 200px) {
+    .chatbot {
+        color: black;
+        align-items: center;
+        text-align: center;
+        padding-top: 40px;
+        display: flex;
+        justify-content: center;
+        
+        }
+      
+    .Auth-form-container-chatadd {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2%;  
+        width: 100vw;
+        height: 50%;
+        }
+        .addChatques-btn-add {
+          width: 100%;
+          display: flex;
+          justify-content: space-evenly;
+          flex-direction: row;
+          align-items: center; 
+        }   
+  }
+
+  @media screen and (max-width: 800px) {
+    .chatbot{
+        color: black;
+        align-items: center;
+        text-align: center;
+        padding-top: 40px;
+        display: flex;
+        justify-content: center;
+        
+        }
+    .Auth-form-container-chatadd {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2%;  
+        width: 100vw;
+        height: 50%;
+        }
+        
+        .addChatques-btn-add {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          flex-direction: row;
+          align-items: center; 
+        }    
+    }
+.NewQA {
+    background-color: black;
+  }
+
+.center {
+  text-align: center;
+}
+
+.Auth-form-chatadd {
+  width: 550px;
+  color: black;
+  border-width: 1px;
+  border-color: #668d3c;
+  border-style: solid;
+  padding-top: 30px;
+  padding-bottom: 40px;
+  border-radius: 20px;
+  background-color: white;
+}
+
+.Auth-form-content-chatadd {
+  
+  padding-left: 12%;
+  padding-right: 12%;
+}
+
+.Auth-form-title-chatadd {
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 24px;
+  color: rgb(34, 34, 34);
+  font-weight: 800;
+}
+
+label {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(34, 34, 34);
+}
+
+.d-grid-chatadd {
+  padding-top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+.d-grid a {
+  font-size: 12px;
+  position: center;
+}
+
+.login-btn-chatadd {
+  width: 100%;
+  display: flex;
+  padding-top: 5%;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.error-text{
+  color:#c4391d;
+
+}
