@@ -1,4 +1,4 @@
-@media screen and (min-width: 601px) {
+@media screen and (min-width: 1021px) {
     .registerTitle {
         color: black;
         align-items: center;
@@ -23,10 +23,17 @@
           justify-content: space-evenly;
           flex-direction: row;
           align-items: center; 
+        }
+        .upload2 {
+          //justify-content: center;
+          padding-left: 40%;
+          padding-right: 40%;
+          //align-items: center;
+          
         }  
   }
   
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 1020px) {
     .registerTitle{
         color: black;
         align-items: center;
@@ -48,8 +55,20 @@
             display: flex;
             justify-content: space-between;
             flex-direction: row;
-            align-items: center; 
+            align-items: center;
+            padding-left: 5%;
+            padding-right: 5%; 
+          }
+
+          .upload2 {
+            //justify-content: center;
+            padding-left: 35%;
+            padding-right: 35%;
+            //align-items: center;
+            
           }  
+          
+            
     }
   
   .Login {
@@ -141,7 +160,7 @@
   
   .btn-primary-add {
     display: flex;
-    width: 40%;
+    width: 30%;
     align-items: center;
     justify-content: center;
     padding: 5px 50px;
@@ -153,7 +172,7 @@
   
   .btn-primary-cancel {
       display: flex;
-      width: 40%;
+      width: 30%;
       align-items: center;
       justify-content: center;
       padding: 5px 50px;
@@ -174,4 +193,10 @@
       border-color: #c4391d;
       color: white;
     }
-  
+.textareas{
+      resize: none;
+    }
+.textareas-description{
+  resize: none;
+  height: 70px;
+}

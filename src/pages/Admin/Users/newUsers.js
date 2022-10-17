@@ -171,7 +171,7 @@ const NewUser = () => {
         }
 
       }else{
-        setUnameError("Username exists");
+        setUnameError("Username already exists");
 
       }
 

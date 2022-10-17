@@ -137,9 +137,9 @@ const  UpdateAnimal = () => {
     }else if( checkAnimalInfo() === false  && checkAnimalQuiz() === true ){
       setAnimalInfoError("");
       setQuizError("*All Animal Quiz Fields are required");
-    }else if( checkAnimalInfo() === false  && checkAnimalQuiz() === true ){
-      setAnimalInfoError("");
-      setQuizError("*All Animal Quiz Fields are required");
+    }else if( checkAnimalInfo() === true && checkAnimalQuiz() === false ){
+      setAnimalInfoError("*All animal information fields are required");
+      setQuizError("");
     }else{
       setAnimalInfoError("");
       setQuizError("");
@@ -316,45 +316,66 @@ const  UpdateAnimal = () => {
 
 
 return (
-      <div>
-        <NavWrapper>
-        <h1 class="registerTitle">Edit Animal</h1> 
-        <div className="Auth-form-container-add">
-        <form className="Auth-form-animal">
-          <div className="Auth-form-content-add">
-            <div class="center">
-            </div>
-            <h2>Animal Information</h2>
-            <div className="error-text">{animalInfoError}</div>
-            <div className="form-group mt-3">
-              <label>Common Name</label><br></br>
+  <div>
+  <NavWrapper>
+    <h1 class="registerTitle">New Animal</h1>
+    <div className="Auth-form-container-add">
+      <form className="Auth-form-animal">
+        <div className="Auth-form-content-animal">
+          <h2>Animal Information</h2>
+          <div className="error-text">{animalInfoError}</div>
+          <br/>
+          {/* GROUP 1 */}
+          <div className="animal-form-group">
+            <div className="form-group mt-1">
+              <label>Common Name</label>
+              <br></br>
               <input
                 type="text"
                 name="animal_name"
-                className={`form-control mt-1 ${!values.animal_name ? 'is-invalid':  ''}`}
+                className={`form-control mt-1 ${
+                  !values.animal_name && animalInfoError !== ""
+                    ? "is-invalid"
+                    : ""
+                }`}
                 placeholder="Enter Common Name"
-                value={values.animal_name} onChange={handleInputChange}/>
-              </div>
-                
-            <div className="form-group mt-3">
-              <label>Scientific Name</label>
-                <input
-                  type="text"
-                  name="animal_sciname"
-                  className={`form-control mt-1 ${!values.animal_sciname ? 'is-invalid':  ''}`}
-                  placeholder="Enter Scientific Name"
-                  value={values.animal_sciname} onChange={handleInputChange}/>
-                  </div>
+                value={values.animal_name}
+                onChange={handleInputChange}
+              />
+            </div>
+            <br/>
 
-            <div className="form-group mt-3">
+            <div className="form-group mt-1">
+              <label>Scientific Name</label>
+              <input
+                type="text"
+                name="animal_sciname"
+                className={`form-control mt-1 ${
+                  !values.animal_sciname && animalInfoError !== ""
+                    ? "is-invalid"
+                    : ""
+                }`}
+                placeholder="Enter Scientific Name"
+                value={values.animal_sciname}
+                onChange={handleInputChange}
+              />
+            </div>
+            <br/>
+
+            <div className="form-group mt-1">
               <label>Enclosure</label>
-                <select
-                  type="text"
-                  name="animal_enclosure"
-                  className={`form-control mt-1 ${!values.animal_enclosure ? 'is-invalid':  ''}`}
-                  placeholder="Select Enclosure"
-                  onChange={handleInputChange}>
-                  <option value="" disabled selected hidden>{values.animal_enclosure}</option>
+              <select
+                type="text"
+                name="animal_enclosure"
+                className={`form-control mt-1 ${
+                  !values.animal_enclosure && animalInfoError !== ""
+                    ? "is-invalid"
+                    : ""
+                }`}
+                placeholder="Select Enclosure"
+                onChange={handleInputChange}
+              >
+               <option value="" disabled selected hidden>{values.animal_enclosure}</option>
                   <option value={String("Elephant")}>Elephant</option>
                   <option value={String("Hippopotamus")}>Hippopotamus</option>
                   <option value={String("Aviary")}>Aviary</option>
@@ -366,38 +387,25 @@ return (
                   <option value={String("Indoor Reptiles")}>Indoor Reptiles</option>
                   <option value={String("Primates")}>Primates</option>
                   <option value={String("Butterfly Garden")}>Butterfly Garden</option>
-                </select>
-                </div>
+              </select>
+            </div>
+            <br/>
 
-            <div className="form-group mt-3">
-              <label>Animal Habitat</label>
-                <input
-                  type="text"
-                  name="animal_habitat"
-                  className={`form-control mt-1 ${!values.animal_habitat ? 'is-invalid':  ''}`}
-                  placeholder="Enter Animal Habitat"
-                  value={values.animal_habitat} onChange={handleInputChange}/>
-                  </div>
-
-            <div className="form-group mt-3">
-              <label>Description</label>
-                <input
-                  type="text"
-                  name="animal_description"
-                  className={`form-control mt-1 ${!values.animal_description ? 'is-invalid':  ''}`}
-                  placeholder="Enter Description"
-                  value={values.animal_description} onChange={handleInputChange}/>
-                  </div>
-
-              <div className="form-group mt-3">
-                <label>Conservation Status</label>
-                  <select
-                    type="text"
-                    name="animal_conservationstatus"
-                    className={`form-control mt-1 ${!values.animal_conservationstatus ? 'is-invalid':  ''}`}
-                    placeholder="Select Conservation Status"
-                    onChange={handleInputChange}>
-                    <option value="" disabled selected hidden>{values.animal_conservationstatus}</option>
+            <div className="form-group mt-1">
+              <label>Conservation Status</label>
+              <select
+                type="text"
+                name="animal_conservationstatus"
+                className={`form-control mt-1 ${
+                  !values.animal_conservationstatus &&
+                  animalInfoError !== ""
+                    ? "is-invalid"
+                    : ""
+                }`}
+                placeholder="Select Conservation Status"
+                onChange={handleInputChange}
+              >
+               <option value="" disabled selected hidden>{values.animal_conservationstatus}</option>
                     <option value={String("Not Evaluated")}>Not Evaluated</option>
                     <option value={String("Data Deficient")}>Data Deficient</option>
                     <option value={String("Least Concern")}>Least Concern</option>
@@ -407,251 +415,406 @@ return (
                     <option value={String("Critically Endangered")}>Critically Endangered</option>
                     <option value={String("Extinct in the Wild")}>Extinct in the Wild</option>
                     <option value={String("Extinct")}>Extinct</option>
-                    </select>
-                      </div>
+              </select>
+            </div>
+            <br/>
 
-              <div className="form-group mt-3">
-                <label>Behavior</label>
-                  <input
-                    type="text"
-                    name="animal_behavior"
-                    className={`form-control mt-1 ${!values.animal_behavior && animalInfoError !=="" ? 'is-invalid':  ''}`}
-                    placeholder="Enter Behavior"
-                    value={values.animal_behavior} onChange={handleInputChange}/>
-                    </div>
+            <div className="form-group mt-1">
+              <label htmlFor="file">Upload Image: &nbsp;</label>
+              <input
+                type="file"
+                name="animal_image"
+                className={`form-control mt-1`}
+                
+                accept="image/png, image/jpeg, image/jpg"
+                id="file"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
 
-              <div className="form-group mt-3">
-                <label>Diet</label>
-                  <input
-                    type="text"
-                    name="animal_diet"
-                    className={`form-control mt-1 ${!values.animal_diet && animalInfoError !=="" ? 'is-invalid':  ''}`}
-                    placeholder="Enter Diet"
-                    value={values.animal_diet} onChange={handleInputChange}/>
-                    </div>
+              {!per ? "" : per + "%"}
+            </div>
+            <br/>
 
-              <div className="form-group mt-3">
-                <label>Distribution</label>
-                <input 
-                  type="text"
-                  name="animal_distribution"
-                  className={`form-control mt-1 ${!values.animal_distribution && animalInfoError !==""? 'is-invalid':  ''}`}
-                  placeholder="Enter Distribution"
-                  value={values.animal_distribution} onChange={handleInputChange}/>
-                  </div>
-                  <br></br>
-                  <br></br>
-                  <br></br>
-                  <div className="form-group mt-3">
-                    <label>Nutrition</label>
-                    <input
-                      type="text"
-                      name="animal_nutrition"
-                      className={`form-control mt-1 ${!values.animal_nutrition && animalInfoError !==""? 'is-invalid':  ''}`}
-                      placeholder="Enter Nutrition"
-                      value={values.animal_nutrition} onChange={handleInputChange}/>
-                      </div>
-                      <br></br>
-                        <label htmlFor="file">Upload Image: &nbsp;</label>
-                        <input
-                          type="file"
-                          name="animal_image"
-                      
-                          accept="image/png, image/jpeg, image/jpg"
-                          id="file"
-                          onChange={(e) => setFile(e.target.files[0])}/>
-                       
-                        {!per? "":per+"%"}
-                        <br></br>
-                        <br></br>
-                       
-                            <label htmlFor="sound">
-                              Upload sound: &nbsp;
-                            </label>
-                            <input
-                              type="file"
-                              name="animal_sound"
-                              accept=".mp3"
-                              id="sound"
-                              onChange={(e) => setSound(e.target.files[0])}/>
-                          
-                          {!per2? "":per2+"%"}
-          <br></br><br></br>
+            <div className="form-group mt-1">
+              <label htmlFor="sound">Upload sound: &nbsp;</label>
+              <input
+                type="file"
+                name="animal_sound"
+                className={`form-control mt-1`}
+                accept=".mp3"
+                id="sound"
+                onChange={(e) => setSound(e.target.files[0])}
+              />
+
+              {!per2 ? "" : per2 + "%"}
+            </div>
+          </div>
+          </div>
+          {/* END GROUP 1 */}
+
+          {/* GROUP 2 */}
+          <br/>
+          <div className="animal-form-group2">
+          <div className="form-group mt-1">
+              <label>Animal Habitat</label>
+              <br></br>
+              <textarea
+        
+                type="text"
+                name="animal_habitat"
+                className={`form-control mt-1 textareas-description ${
+                  !values.animal_habitat
+                    ? "is-invalid" && animalInfoError !== ""
+                    : ""
+                }`}
+                placeholder="Enter Animal Habitat"
+                value={values.animal_habitat}
+                onChange={handleInputChange}
+              />
+            </div>
+            <br/>
+
+            <div className="form-group mt-1">
+              <label>Behavior</label>
+              <textarea
+                type="text"
+                name="animal_behavior"
+                className={`form-control mt-1 textareas-description ${
+                  !values.animal_behavior && animalInfoError !== ""
+                    ? "is-invalid"
+                    : ""
+                }`}
+                placeholder="Enter Behavior"
+                value={values.animal_behavior}
+                onChange={handleInputChange}
+              />
+            </div>
+            <br/>
+
+            <div className="form-group mt-1">
+              <label>Diet</label>
+              <textarea
+                type="text"
+                name="animal_diet"
+                className={`form-control mt-1 textareas-description ${
+                  !values.animal_diet && animalInfoError !== ""
+                    ? "is-invalid"
+                    : ""
+                }`}
+                placeholder="Enter Diet"
+                value={values.animal_diet}
+                onChange={handleInputChange}
+              />
+            </div>
+            <br/>
+    
+            <div className="form-group mt-1">
+              <label>Description</label>
+              <textarea
+             
+                type="text"
+                name="animal_description"
+                className={`form-control mt-1 textareas-description ${
+                  !values.animal_description && animalInfoError !== ""
+                    ? "is-invalid"
+                    : ""
+                }`}
+                placeholder="Enter Description"
+                value={values.animal_description}
+                onChange={handleInputChange}
+              />
+            </div>
+            <br/>
+
+            <div className="form-group mt-1">
+              <label>Distribution</label>
+              <textarea
+                type="text"
+                name="animal_distribution"
+                className={`form-control mt-1 textareas-description ${
+                  !values.animal_distribution && animalInfoError !== ""
+                    ? "is-invalid"
+                    : ""
+                }`}
+                placeholder="Enter Distribution"
+                value={values.animal_distribution}
+                onChange={handleInputChange}
+              />
+            </div>
+            <br/>
+
+            <div className="form-group mt-1">
+              <label>Nutrition</label>
+              <textarea
+                type="text"
+                name="animal_nutrition"
+                className={`form-control mt-1 textareas-description ${
+                  !values.animal_nutrition && animalInfoError !== ""
+                    ? "is-invalid"
+                    : ""
+                }`}
+                placeholder="Enter Nutrition"
+                value={values.animal_nutrition}
+                onChange={handleInputChange}
+              />
+            </div>
+        </div>
+        {/* END GROUP 2 */}
+        <br/>
+
+        <div className="Auth-form-content-quiz">
           <h2>Animal Quiz</h2>
           <div className="error-text"> {quizError}</div>
-          <br></br>
-          <label>Question 1: </label>
-          <input
+          <br/>
+
+          <label>Question 1 </label>
+          <textarea
             type="text"
             name="question"
-            className={`form-control mt-1 ${!quiz1.question && quizError !==""? 'is-invalid':  ''}`}
+           className={`form-control mt-1 textareas-description ${
+              !quiz1.question && quizError !== "" ? "is-invalid" : ""
+            }`}
             placeholder="Enter Question 1"
-            value={quiz1.question} onChange={handleInputChangeQuiz1}/>
+            value={quiz1.question}
+            onChange={handleInputChangeQuiz1}
+          />
 
-            <br></br>
-            
+<br/>
+
           <label>Choices</label>
-          <input
+          <textarea
             type="text"
             name="choicea"
-            className={`form-control mt-1 ${!quiz1.choicea && quizError !==""? 'is-invalid':  ''}`}
+           className={`form-control mt-1 textareas-description ${
+              !quiz1.choicea && quizError !== "" ? "is-invalid" : ""
+            }`}
             placeholder="Enter First Choice"
-            value={quiz1.choicea} onChange={handleInputChangeQuiz1}/>
-            
-          <input
+            value={quiz1.choicea}
+            onChange={handleInputChangeQuiz1}
+          />
+
+          <textarea
             type="text"
             name="choiceb"
-            className={`form-control mt-1 ${!quiz1.choiceb && quizError !==""? 'is-invalid':  ''}`}
+           className={`form-control mt-1 textareas-description ${
+              !quiz1.choiceb && quizError !== "" ? "is-invalid" : ""
+            }`}
             placeholder="Enter Second Choice"
-            value={quiz1.choiceb} onChange={handleInputChangeQuiz1}/>
+            value={quiz1.choiceb}
+            onChange={handleInputChangeQuiz1}
+          />
 
-          <input
+          <textarea
             type="text"
             name="choicec"
-            className={`form-control mt-1 ${!quiz1.choicec && quizError !==""? 'is-invalid':  ''}`}
+           className={`form-control mt-1 textareas-description ${
+              !quiz1.choicec && quizError !== "" ? "is-invalid" : ""
+            }`}
             placeholder="Enter Third Choice"
-            value={quiz1.choicec} onChange={handleInputChangeQuiz1}/>
+            value={quiz1.choicec}
+            onChange={handleInputChangeQuiz1}
+          />
 
-
-          <br></br>
+<br/>
           <label>Answer</label>
-          <input
+          <textarea
             type="text"
             name="answer"
-            className={`form-control mt-1 ${!quiz1.answer && quizError !=="" ? 'is-invalid':  ''}`}
+           className={`form-control mt-1 textareas-description ${
+              !quiz1.answer && quizError !== "" ? "is-invalid" : ""
+            }`}
             placeholder="Enter Answer"
-            value={quiz1.answer} onChange={handleInputChangeQuiz1}/>
-          
-          <br></br>
+            value={quiz1.answer}
+            onChange={handleInputChangeQuiz1}
+          />
+
+<br/>
           <label>Explanation</label>
-          <input
+          <textarea
             type="text"
             name="explanation"
-            className={`form-control mt-1 ${!quiz1.explanation && quizError !==""? 'is-invalid':  ''}`}
+           className={`form-control mt-1 textareas-description ${
+              !quiz1.explanation && quizError !== "" ? "is-invalid" : ""
+            }`}
             placeholder="Enter Explanation"
-            value={quiz1.explanation} onChange={handleInputChangeQuiz1}/>
+            value={quiz1.explanation}
+            onChange={handleInputChangeQuiz1}
+          />
 
-          <br></br>
-          <label>Question 2: </label>
-          <input
+<br/>
+          <label>Question 2 </label>
+          <textarea
             type="text"
             name="question"
-            className={`form-control mt-1 ${!quiz2.question && quizError !==""? 'is-invalid':  ''}`}
+           className={`form-control mt-1 textareas-description ${
+              !quiz2.question && quizError !== "" ? "is-invalid" : ""
+            }`}
             placeholder="Enter Question 2"
-            value={quiz2.question} onChange={handleInputChangeQuiz2}/>
+            value={quiz2.question}
+            onChange={handleInputChangeQuiz2}
+          />
 
-          <br></br>
-          <br></br>
+<br/>
           <label>Choices</label>
-          <input
+          <textarea
             type="text"
             name="choicea"
-            className={`form-control mt-1 ${!quiz2.choicea && quizError !==""? 'is-invalid':  ''}`}
+           className={`form-control mt-1 textareas-description ${
+              !quiz2.choicea && quizError !== "" ? "is-invalid" : ""
+            }`}
             placeholder="Enter First Choice"
-            value={quiz2.choicea} onChange={handleInputChangeQuiz2}/>
-            
-          <input
+            value={quiz2.choicea}
+            onChange={handleInputChangeQuiz2}
+          />
+
+          <textarea
             type="text"
             name="choiceb"
-            className={`form-control mt-1 ${!quiz2.choiceb && quizError !==""? 'is-invalid':  ''}`}
+           className={`form-control mt-1 textareas-description ${
+              !quiz2.choiceb && quizError !== "" ? "is-invalid" : ""
+            }`}
             placeholder="Enter Second Choice"
-            value={quiz2.choiceb} onChange={handleInputChangeQuiz2}/>
+            value={quiz2.choiceb}
+            onChange={handleInputChangeQuiz2}
+          />
 
-          <input
+          <textarea
             type="text"
             name="choicec"
-            className={`form-control mt-1 ${!quiz2.choicec && quizError !==""? 'is-invalid':  ''}`}
+           className={`form-control mt-1 textareas-description ${
+              !quiz2.choicec && quizError !== "" ? "is-invalid" : ""
+            }`}
             placeholder="Enter Third Choice"
-            value={quiz2.choicec} onChange={handleInputChangeQuiz2}/>
+            value={quiz2.choicec}
+            onChange={handleInputChangeQuiz2}
+          />
 
-   
-
-          <br></br>
+<br/>
           <label>Answer</label>
-          <input
-            type="text"
-            name="answer" 
-            className={`form-control mt-1 ${!quiz2.answer && quizError !==""? 'is-invalid':  ''}`}
-            placeholder="Enter Answer"
-            value={quiz2.answer} onChange={handleInputChangeQuiz2}/>
-
-          <br></br>
-          <label>Explanation</label>
-          <input
-            type="text"
-            name="explanation"
-            className={`form-control mt-1 ${!quiz2.explanation && quizError !==""? 'is-invalid':  ''}`}
-            placeholder="Enter Explanation"
-            value={quiz2.explanation} onChange={handleInputChangeQuiz2}/>
-          
-          <br></br>
-          <label>Question 3: </label>
-          <input
-            type="text"
-            name="question" 
-            className={`form-control mt-1 ${!quiz3.question && quizError !==""? 'is-invalid':  ''}`}
-            placeholder="Enter Question 3"
-            value={quiz3.question} onChange={handleInputChangeQuiz3}/>
-
-          <br></br>
-          <label>Choices</label>
-          <input
-            type="text"
-            name="choicea"
-            className={`form-control mt-1 ${!quiz3.choicea && quizError !==""? 'is-invalid':  ''}`}
-            placeholder="Enter First Choice"
-            value={quiz3.choicea} onChange={handleInputChangeQuiz3}/>
-
-          <input
-            type="text" 
-            name="choiceb"
-            className={`form-control mt-1 ${!quiz3.choiceb && quizError !==""? 'is-invalid':  ''}`}
-            placeholder="Enter Second Choice"
-            value={quiz3.choiceb} onChange={handleInputChangeQuiz3}/>
-
-          <input
-            type="text"
-            name="choicec"
-            className={`form-control mt-1 ${!quiz3.choicec && quizError !==""? 'is-invalid':  ''}`}
-            placeholder="Enter Third Choice"
-            value={quiz3.choicec} onChange={handleInputChangeQuiz3}/>
-
-
-          <br></br>
-          <label>Answer</label>
-          <input
+          <textarea
             type="text"
             name="answer"
-            className={`form-control mt-1 ${!quiz3.answer && quizError !==""? 'is-invalid':  ''}`}
-            placeholder="Enter Answer" 
-            value={quiz3.answer} onChange={handleInputChangeQuiz3}/>
+           className={`form-control mt-1 textareas-description ${
+              !quiz2.answer && quizError !== "" ? "is-invalid" : ""
+            }`}
+            placeholder="Enter Answer"
+            value={quiz2.answer}
+            onChange={handleInputChangeQuiz2}
+          />
 
-          <br></br>
+<br/>
           <label>Explanation</label>
-          <input 
+          <textarea
             type="text"
             name="explanation"
-            className={`form-control mt-1 ${!quiz3.explanation && quizError !==""? 'is-invalid':  ''}`}
+           className={`form-control mt-1 textareas-description ${
+              !quiz2.explanation && quizError !== "" ? "is-invalid" : ""
+            }`}
             placeholder="Enter Explanation"
-            value={quiz3.explanation} onChange={handleInputChangeQuiz3}/>
-          
-          <br></br>
-          <br></br>
-          <div className="editanimal-btn-add">
-          <button onClick={UpdateAnimal} type="submit" className="btn btn-primary-add">
+            value={quiz2.explanation}
+            onChange={handleInputChangeQuiz2}
+          />
+
+<br/>
+          <label>Question 3 </label>
+          <textarea
+            type="text"
+            name="question"
+           className={`form-control mt-1 textareas-description ${
+              !quiz3.question && quizError !== "" ? "is-invalid" : ""
+            }`}
+            placeholder="Enter Question 3"
+            value={quiz3.question}
+            onChange={handleInputChangeQuiz3}
+          />
+
+<br/>
+          <label>Choices</label>
+          <textarea
+            type="text"
+            name="choicea"
+           className={`form-control mt-1 textareas-description ${
+              !quiz3.choicea && quizError !== "" ? "is-invalid" : ""
+            }`}
+            placeholder="Enter First Choice"
+            value={quiz3.choicea}
+            onChange={handleInputChangeQuiz3}
+          />
+
+          <textarea
+            type="text"
+            name="choiceb"
+           className={`form-control mt-1 textareas-description ${
+              !quiz3.choiceb && quizError !== "" ? "is-invalid" : ""
+            }`}
+            placeholder="Enter Second Choice"
+            value={quiz3.choiceb}
+            onChange={handleInputChangeQuiz3}
+          />
+
+          <textarea
+            type="text"
+            name="choicec"
+           className={`form-control mt-1 textareas-description ${
+              !quiz3.choicec && quizError !== "" ? "is-invalid" : ""
+            }`}
+            placeholder="Enter Third Choice"
+            value={quiz3.choicec}
+            onChange={handleInputChangeQuiz3}
+          />
+
+<br/>
+          <label>Answer</label>
+          <textarea
+            type="text"
+            name="answer"
+           className={`form-control mt-1 textareas-description ${
+              !quiz3.answer && quizError !== "" ? "is-invalid" : ""
+            }`}
+            placeholder="Enter Answer"
+            value={quiz3.answer}
+            onChange={handleInputChangeQuiz3}
+          />
+
+<br/>
+          <label>Explanation</label>
+          <textarea
+            type="text"
+            name="explanation"
+           className={`form-control mt-1 textareas-description ${
+              !quiz3.explanation && quizError !== "" ? "is-invalid" : ""
+            }`}
+            placeholder="Enter Explanation"
+            value={quiz3.explanation}
+            onChange={handleInputChangeQuiz3}
+          />
+        </div>
+        <br/> <br/>
+        <div className="newanimal-btn-add">
+          <button
+            onClick={UpdateAnimal}
+            type="submit"
+            className="btn btn-primary-add"
+          >
             Save
-            </button>
-          
-            <button onClick={(e) => {e.preventDefault();if(window.confirm("Are you sure you want to cancel?")){Cancel()}}} className="btn btn-primary-cancel">
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              if (window.confirm("Are you sure you want to cancel?")) {
+                Cancel();
+              }
+            }}
+            className="btn btn-primary-cancel"
+          >
             Cancel
-            </button>
-    
-          </div>
-          </div>
-          </form>
-          </div>
-        </NavWrapper>  
+          </button>
+        </div>
+      </form>
     </div>
+  </NavWrapper>
+</div>
   );
 };
 

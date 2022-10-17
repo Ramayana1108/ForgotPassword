@@ -67,7 +67,7 @@ const ChatbotUpdate = () => {
               answer: String(values.answer),
              
           } ).then(response => {
-            alert("Successfully Updated")
+            alert("Response Updated Successfully.")
             navigate("/chatbot");
           }).catch(error =>{
             console.log(error.message)
@@ -92,9 +92,9 @@ const ChatbotUpdate = () => {
             
             <div className="form-group mt-3">
               <label>Question</label>
-              <input
+              <textarea
                 type="text"
-                className={`form-control mt-1 ${qError ? 'is-invalid':  ''}`}
+                className={`form-control mt-1 textarea-updatechat ${qError ? 'is-invalid':  ''}`}
                 placeholder="Enter question"
                 name="question" 
                 value={values.question} 
@@ -105,9 +105,9 @@ const ChatbotUpdate = () => {
 
             <div className="form-group mt-3">
               <label>Answer</label>
-              <input
+              <textarea
                 type="answer"
-                className={`form-control mt-1 ${aError ? 'is-invalid':  ''}`}
+                className={`form-control mt-1 textarea-updatechat ${aError ? 'is-invalid':  ''}`}
                 placeholder="Enter answer"
                 name="answer" 
                 value={values.answer} 

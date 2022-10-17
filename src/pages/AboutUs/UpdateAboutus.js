@@ -146,7 +146,7 @@ const AboutUsUpdate = () => {
               type="text"
               name="abt_description"
               placeholder="Enter Description"
-              className="form-control mt-1"
+              className="form-control mt-1 textareas-desc"
               value={values.abt_description} 
               onChange={handleInputChange}
             />
@@ -158,7 +158,7 @@ const AboutUsUpdate = () => {
               type="text"
               name="abt_address"
               placeholder="Enter Address"
-              className="form-control mt-1"
+              className="form-control mt-1 textareas-address"
               value={values.abt_address} 
               onChange={handleInputChange}
             />

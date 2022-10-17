@@ -21,6 +21,15 @@ export const userColumns = [
     headerAlign: 'center',
     align: 'center',
     flex:1,
+
+    renderCell: (params) => {
+ 
+      return (
+        <div>
+          {params.row.abt_description.substring(0,500)}.....
+        </div>
+      );
+    },
   },
   
 ];
