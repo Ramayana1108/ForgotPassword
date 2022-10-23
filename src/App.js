@@ -32,7 +32,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Login />} />
               <Route path="/forgotpassword" element={<ForgotPassword />} />
-
+              <Route path="/resetpassword" element={<ResetPassword />} />
               <Route element={<ProtectedRoutes/>}>
 
                 <Route element={<AdminRoutes/>}>

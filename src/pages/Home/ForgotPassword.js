@@ -1,12 +1,8 @@
-import React, {useState,useEffect} from "react";
+import React, {useState,useRef} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.scss";
 import "./ForgotPassword.scss";
-import PropTypes from 'prop-types';
-import bcrypt from 'bcryptjs';
-import Users from '../Admin/Users/Users'
-import Login from "./Login";
-
+import emailjs from 'emailjs-com';
 import { Navigate } from "react-router";
 import {useNavigate, Link } from "react-router-dom";
 import {
@@ -21,9 +17,13 @@ import { async } from "@firebase/util";
 import { FunctionsOutlined } from "@mui/icons-material";
 
 const ForgotPassword = () => {
-    const [email,setEmail] = useState();
+    const [user_email,setUser_Email] = useState();
     const [emailError,setEmailError] = useState("");
+    const [userId, setUserId]= useState("");
     const colRef = collection(db,"Users");
+   
+
+
 
    const navigate = useNavigate();
 
@@ -31,28 +31,33 @@ const ForgotPassword = () => {
    const handleSubmit = async (e)=>{
     e.preventDefault();
 
-      if(!email){
+      if(!user_email){
         setEmailError("There is no input");
       }else{
-        const q = query(colRef, where("email","==",email));  
+        const q = query(colRef, where("email","==",user_email));  
         let useremail= [];
         getDocs(q).then(async (response) => {
           useremail = await response.docs.map((doc) => ({
           email: doc.data().email,
-      
+          id: doc.id      
         }));     
       }).then(()=>{
-        if(useremail.length === 0){
+        if(useremail[0].email === 0){
           setEmailError("email does not exist or is not an administrator");
         }else{
-          setEmailError("email sent")
+          var templateParams = {
+            user_email: useremail[0].email,
+            id: useremail[0].id
+        };
+          emailjs.send('service_rbj9nsp', 'template_7eppjnx', templateParams, 'toC84K2tm5N48z4A-')
+          .then((result) => {
+              alert("success");
+          }, (error) => {
+              console.log(error.text);
+          });
         }
-
       })
       }
-        
-
-
    }
 
     const Cancel = () =>{
@@ -72,9 +77,10 @@ const ForgotPassword = () => {
           <label>Email</label>
           <input
             type="text"
+            name="user_email"
             className="form-control mt-1"
             placeholder="Enter Email"     
-            onChange={(e)=> {setEmail(e.target.value); setEmailError("");}}     
+            onChange={(e)=> {setUser_Email(e.target.value); setEmailError("");}}     
           />
            <div className="error-text">{emailError}</div>
         </div>
