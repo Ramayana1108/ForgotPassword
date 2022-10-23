@@ -1,7 +1,8 @@
 import React, {useState,useEffect} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ResetPass.scss";
-
+import { collection, query, where,getDocs, doc, getDoc,updateDoc, QuerySnapshot } from "firebase/firestore";
+import { db } from "../../services/firebase-config";
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 
@@ -13,11 +14,16 @@ const ResetPassword = () => {
   const [repass, setRepass]= useState("")
   const [passError, setPassError]= useState("")
   const [repassError, setRepassError]= useState("")
+  const pathname = window.location.pathname
+  const id = pathname.substring(15);
+  const docRef = doc(db,'Users',id);
 
 
   const handleSubmit = async (e)=>{
     e.preventDefault();
-  
+    
+    console.log(pass);
+    console.log(repass);
     if(!pass){
       setPassError("No input");
     }else{
@@ -31,8 +37,15 @@ const ResetPassword = () => {
             if(pass=== repass){
               setPassError("");
               setRepassError("");
-              console.log("successfully updated")
-
+              updateDoc(docRef,{
+              
+                password: String(bcrypt.hashSync(pass,10))
+              } ).then(response => {
+                  alert("Password Reset Successful")
+                  Navigate("/");
+                }).catch(error =>{
+                  console.log(error.message)
+                })
             }else{
               setRepassError("Passwords do not match");
             }
