@@ -6,7 +6,7 @@ import { db } from "../../services/firebase-config";
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 
-import { Navigate } from "react-router";
+import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 const ResetPassword = () => {
@@ -17,7 +17,7 @@ const ResetPassword = () => {
   const pathname = window.location.pathname
   const id = pathname.substring(15);
   const docRef = doc(db,'Users',id);
-
+  const navigate = useNavigate();
 
   const handleSubmit = async (e)=>{
     e.preventDefault();
@@ -42,7 +42,7 @@ const ResetPassword = () => {
                 password: String(bcrypt.hashSync(pass,10))
               } ).then(response => {
                   alert("Password Reset Successful")
-                  Navigate("/");
+                  navigate("/");
                 }).catch(error =>{
                   console.log(error.message)
                 })
