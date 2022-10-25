@@ -24,7 +24,7 @@ const ResetPassword = () => {
   useEffect(() => {
     getDoc(docRef).then((results)=>{
 
-       if(date2.getTime()<=results.data().reset_request_date_time){        
+       if(date2.getTime()-100*60000<=results.data().reset_request_date_time){        
         setValidLink(true)
       }else{ 
         setValidLink(false)
