@@ -13,13 +13,18 @@ import {
   onSnapshot,where, query, updateDoc
 } from "firebase/firestore";
 import { db } from "../../services/firebase-config";
-
+import { Temporal } from '@js-temporal/polyfill';
 
 const ForgotPassword = () => {
     const [user_email,setUser_Email] = useState();
     const [emailError,setEmailError] = useState("");
+    const [userId, setUserId]= useState("");
     const colRef = collection(db,"Users");
-  
+   
+    function addMinutes(date, minutes) {
+      return new Date(date.getTime() + minutes*60000);
+  }
+
 
    const navigate = useNavigate();
 
