@@ -37,7 +37,6 @@ function App() {
 
                 <Route element={<AdminRoutes/>}>
                   <Route path="/users" element={<Users />} />
-                  <Route path="/resetPassword" element={<ResetPassword />} />
                   <Route path="/newUser" element={<NewUser/>}/>
                   <Route path="/updateUser" element={<UserUpdate/>}/>
                   <Route path="/archiveanimals" element={<AnimalarchiveList/>}/>

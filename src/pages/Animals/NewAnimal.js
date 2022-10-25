@@ -40,6 +40,32 @@ const NewAnimal = () => {
       return false;
     }
   };
+  const checkAnimalQuizforNull = () => {
+    if (
+      !quiz1.question &&
+      !quiz1.choicea &&
+      !quiz1.choiceb &&
+      !quiz1.choicec &&
+      !quiz1.answer &&
+      !quiz1.explanation &&
+      !quiz2.question &&
+      !quiz2.choicea &&
+      !quiz2.choiceb &&
+      !quiz2.choicec &&
+      !quiz2.answer &&
+      !quiz2.explanation &&
+      !quiz3.question &&
+      !quiz3.choicea &&
+      !quiz3.choiceb &&
+      !quiz3.choicec &&
+      !quiz3.answer &&
+      !quiz3.explanation
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   const checkAnimalQuiz = () => {
     if (
@@ -70,6 +96,7 @@ const NewAnimal = () => {
 
   //handle input change
   const handleInputChange = (e) => {
+    setAnimalInfoError("")
     const { name, value } = e.target;
     setValues({
       ...values,
@@ -78,6 +105,7 @@ const NewAnimal = () => {
   };
 
   const handleInputChangeQuiz1 = (e) => {
+    setQuizError("");
     const { name, value } = e.target;
     setQuiz1({
       ...quiz1,
@@ -85,6 +113,7 @@ const NewAnimal = () => {
     });
   };
   const handleInputChangeQuiz2 = (e) => {
+    setQuizError("");
     const { name, value } = e.target;
     setQuiz2({
       ...quiz2,
@@ -92,6 +121,7 @@ const NewAnimal = () => {
     });
   };
   const handleInputChangeQuiz3 = (e) => {
+    setQuizError("");
     const { name, value } = e.target;
     setQuiz3({
       ...quiz3,
@@ -102,209 +132,280 @@ const NewAnimal = () => {
   //Add Animal with image
   const AddAnimal = (event) => {
     event.preventDefault();
+    const soundname = (sound.name === undefined || sound.name == null || sound.name <= 0) ? true : false;
+    const storageRef = ref(storage, "images/" + file.name);
+    const uploadTask = uploadBytesResumable(storageRef, file);
 
-    console.log(checkAnimalInfo());
-    const name = new Date().getTime() + file.name;
-    const name2 = new Date().getTime() + sound.name;
+    const storageRef2 = ref(storage, "sound/" + sound.name);
+    const uploadTask2 = uploadBytesResumable(storageRef2, sound);
 
     if (
       checkAnimalInfo() === true &&
-      !file === true &&
-      checkAnimalQuiz() === true
+      !file === true
     ) {
       setAnimalInfoError("*All animal information fields are required");
-      setImageError("* An image must be uploaded");
-      setQuizError("*All Animal Quiz Fields are required");
-    } else if (
-      checkAnimalInfo() === false &&
-      !file === true &&
-      checkAnimalQuiz() === true
-    ) {
+      setImageError("*An image must be uploaded");
+    }else if(checkAnimalInfo() === false &&
+    !file === true){
       setAnimalInfoError("");
-      setImageError("* An image must be uploaded");
-      setQuizError("*All Animal Quiz Fields are required");
-    } else if (
-      checkAnimalInfo() === false &&
-      !file === false &&
-      checkAnimalQuiz() === true
-    ) {
-      setAnimalInfoError("");
-      setImageError("");
-      setQuizError("*All Animal Quiz Fields are required");
-    } else if (
-      checkAnimalInfo() === false &&
-      !file === true &&
-      checkAnimalQuiz() === false
-    ) {
-      setAnimalInfoError("");
-      setImageError("* An image must be uploaded");
-      setQuizError("");
-    } else if (
+      setImageError("*An image must be uploaded");
+    }else if(
       checkAnimalInfo() === true &&
-      !file === false &&
-      checkAnimalQuiz() === false
+      !file === false
     ) {
       setAnimalInfoError("*All animal information fields are required");
       setImageError("");
-      setQuizError("");
-    } else {
+    }else{
       setAnimalInfoError("");
       setImageError("");
-      setQuizError("");
-
-      const storageRef = ref(storage, "images/" + file.name);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      const storageRef2 = ref(storage, "sound/" + sound.name);
-      const uploadTask2 = uploadBytesResumable(storageRef2, sound);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          setPerc(progress);
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const animalRef = doc(db, "animals", values.animal_name);
-
-            setDoc(animalRef, {
-              animal_archive: false,
-              animal_name: values.animal_name,
-              animal_sciname: values.animal_sciname,
-              animal_enclosure: String(values.animal_enclosure),
-              animal_habitat: values.animal_habitat,
-              animal_description: values.animal_description,
-              animal_conservationstatus: values.animal_conservationstatus,
-              animal_behavior: values.animal_behavior,
-              animal_diet: values.animal_diet,
-              animal_distribution: values.animal_distribution,
-              animal_nutrition: values.animal_nutrition,
-              animal_imageurl: downloadURL,
-            })
-              .then(() => {
-                //quiz1
-                const q1Ref = doc(
-                  db,
-                  "animals",
-                  values.animal_name,
-                  "animal_quiz",
-                  "quiz1"
-                );
-                setDoc(q1Ref, {
-                  question: String(quiz1.question),
-                  choicea: String(quiz1.choicea),
-                  choiceb: String(quiz1.choiceb),
-                  choicec: String(quiz1.choicec),
-                  answer: String(quiz1.answer),
-                  explanation: String(quiz1.explanation),
+      console.log(checkAnimalQuizforNull())
+      if (checkAnimalQuizforNull() === true){
+        setQuizError("");
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            setPerc(progress);
+          },
+          (error) => {
+            console.log(error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              const animalRef = doc(db, "animals", values.animal_name);
+  
+              setDoc(animalRef, {
+                animal_archive: false,
+                animal_name: values.animal_name,
+                animal_sciname: values.animal_sciname,
+                animal_enclosure: String(values.animal_enclosure),
+                animal_habitat: values.animal_habitat,
+                animal_description: values.animal_description,
+                animal_conservationstatus: values.animal_conservationstatus,
+                animal_behavior: values.animal_behavior,
+                animal_diet: values.animal_diet,
+                animal_distribution: values.animal_distribution,
+                animal_nutrition: values.animal_nutrition,
+                animal_imageurl: downloadURL,
+              })
+                .then(() => {
+                  if(soundname === false){
+                    uploadTask2.on(
+                      "state_changed",
+                      (snapshot) => {
+                        const progress =
+                          (snapshot.bytesTransferred /
+                            snapshot.totalBytes) *
+                          100;
+                        console.log("Upload is " + progress + "% done");
+                        setPerc2(progress);
+                        switch (snapshot.state) {
+                          case "paused":
+                            console.log("Upload is paused");
+                            break;
+                          case "running":
+                            console.log("Upload is running");
+                            break;
+                          default:
+                            break;
+                        }
+                      },
+                      (error) => {
+                        console.log(error);
+                      },
+                      () => {
+                        getDownloadURL(uploadTask2.snapshot.ref).then(
+                          (downloadURL) => {
+                            updateDoc(animalRef, {
+                              animal_sound: downloadURL,
+                            })
+                              .then(() => {
+                                alert("Animal Added");
+                                navigate("/animals");
+                              })
+                              .catch((error) => {
+                                alert(error.message);
+                              });
+                          }
+                        );
+                      }
+                    );
+                  }else{
+                    alert("Animal Added");
+                    navigate("/animals");
+                  }
+                             
+                            })                        
+                .catch((error) => {
+                  alert(error.message);
+                });
+            });
+          }
+        );
+        
+      }else{
+        if(checkAnimalQuiz() === true){
+          setQuizError("*All Animal Quiz Fields are required");
+        }else{
+          setQuizError("");
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log("Upload is " + progress + "% done");
+              setPerc(progress);
+            },
+            (error) => {
+              console.log(error);
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                const animalRef = doc(db, "animals", values.animal_name);
+    
+                setDoc(animalRef, {
+                  animal_archive: false,
+                  animal_name: values.animal_name,
+                  animal_sciname: values.animal_sciname,
+                  animal_enclosure: String(values.animal_enclosure),
+                  animal_habitat: values.animal_habitat,
+                  animal_description: values.animal_description,
+                  animal_conservationstatus: values.animal_conservationstatus,
+                  animal_behavior: values.animal_behavior,
+                  animal_diet: values.animal_diet,
+                  animal_distribution: values.animal_distribution,
+                  animal_nutrition: values.animal_nutrition,
+                  animal_imageurl: downloadURL,
                 })
                   .then(() => {
-                    //quiz2
-                    const q2Ref = doc(
+                    //quiz1
+                    const q1Ref = doc(
                       db,
                       "animals",
                       values.animal_name,
                       "animal_quiz",
-                      "quiz2"
+                      "quiz1"
                     );
-                    setDoc(q2Ref, {
-                      question: String(quiz2.question),
-                      choicea: String(quiz2.choicea),
-                      choiceb: String(quiz2.choiceb),
-                      choicec: String(quiz2.choicec),
-                      answer: String(quiz2.answer),
-                      explanation: String(quiz2.explanation),
+                    setDoc(q1Ref, {
+                      question: String(quiz1.question),
+                      choicea: String(quiz1.choicea),
+                      choiceb: String(quiz1.choiceb),
+                      choicec: String(quiz1.choicec),
+                      answer: String(quiz1.answer),
+                      explanation: String(quiz1.explanation),
                     })
                       .then(() => {
-                        //quiz3
-                        const q3Ref = doc(
+                        //quiz2
+                        const q2Ref = doc(
                           db,
                           "animals",
                           values.animal_name,
                           "animal_quiz",
-                          "quiz3"
+                          "quiz2"
                         );
-                        setDoc(q3Ref, {
-                          question: String(quiz3.question),
-                          choicea: String(quiz3.choicea),
-                          choiceb: String(quiz3.choiceb),
-                          choicec: String(quiz3.choicec),
-                          answer: String(quiz3.answer),
-                          explanation: String(quiz3.explanation),
+                        setDoc(q2Ref, {
+                          question: String(quiz2.question),
+                          choicea: String(quiz2.choicea),
+                          choiceb: String(quiz2.choiceb),
+                          choicec: String(quiz2.choicec),
+                          answer: String(quiz2.answer),
+                          explanation: String(quiz2.explanation),
                         })
                           .then(() => {
-                            uploadTask2.on(
-                              "state_changed",
-                              (snapshot) => {
-                                const progress =
-                                  (snapshot.bytesTransferred /
-                                    snapshot.totalBytes) *
-                                  100;
-                                console.log("Upload is " + progress + "% done");
-                                setPerc2(progress);
-                                switch (snapshot.state) {
-                                  case "paused":
-                                    console.log("Upload is paused");
-                                    break;
-                                  case "running":
-                                    console.log("Upload is running");
-                                    break;
-                                  default:
-                                    break;
-                                }
-                              },
-                              (error) => {
-                                console.log(error);
-                              },
-                              () => {
-                                getDownloadURL(uploadTask2.snapshot.ref).then(
-                                  (downloadURL) => {
-                                    updateDoc(animalRef, {
-                                      animal_sound: downloadURL,
-                                    })
-                                      .then(() => {
-                                        alert("Animal Added");
-                                        navigate("/animals");
-                                      })
-                                      .catch((error) => {
-                                        alert(error.message);
-                                      });
-                                  }
-                                );
-                              }
+                            //quiz3
+                            const q3Ref = doc(
+                              db,
+                              "animals",
+                              values.animal_name,
+                              "animal_quiz",
+                              "quiz3"
                             );
+                            setDoc(q3Ref, {
+                              question: String(quiz3.question),
+                              choicea: String(quiz3.choicea),
+                              choiceb: String(quiz3.choiceb),
+                              choicec: String(quiz3.choicec),
+                              answer: String(quiz3.answer),
+                              explanation: String(quiz3.explanation),
+                            })
+                              .then(() => {
+                                if(soundname === false){
+                                  uploadTask2.on(
+                                    "state_changed",
+                                    (snapshot) => {
+                                      const progress =
+                                        (snapshot.bytesTransferred /
+                                          snapshot.totalBytes) *
+                                        100;
+                                      console.log("Upload is " + progress + "% done");
+                                      setPerc2(progress);
+                                      switch (snapshot.state) {
+                                        case "paused":
+                                          console.log("Upload is paused");
+                                          break;
+                                        case "running":
+                                          console.log("Upload is running");
+                                          break;
+                                        default:
+                                          break;
+                                      }
+                                    },
+                                    (error) => {
+                                      console.log(error);
+                                    },
+                                    () => {
+                                      getDownloadURL(uploadTask2.snapshot.ref).then(
+                                        (downloadURL) => {
+                                          updateDoc(animalRef, {
+                                            animal_sound: downloadURL,
+                                          })
+                                            .then(() => {
+                                              alert("Animal Added");
+                                              navigate("/animals");
+                                            })
+                                            .catch((error) => {
+                                              alert(error.message);
+                                            });
+                                        }
+                                      );
+                                    }
+                                  );
+                                }else{
+                                  alert("Animal Added");
+                                  navigate("/animals");
+                                }
+                              })
+                              .catch((error) => {
+                                alert(error.message);
+                              });
+    
+                            //end of 3rd quiz
                           })
                           .catch((error) => {
                             alert(error.message);
                           });
-
-                        //end of 3rd quiz
+    
+                        //end of 2nd quiz
                       })
                       .catch((error) => {
                         alert(error.message);
                       });
-
-                    //end of 2nd quiz
+    
+                    //end of first quiz
                   })
                   .catch((error) => {
                     alert(error.message);
                   });
-
-                //end of first quiz
-              })
-              .catch((error) => {
-                alert(error.message);
               });
-          });
+            }
+          );
+          
         }
-      );
+      }
     }
+   
   };
 
   //cancel Button
@@ -464,9 +565,7 @@ const NewAnimal = () => {
                   <input
                     type="file"
                     name="animal_sound"
-                    className={`form-control mt-1 ${
-                      imageError ? "is-invalid" : ""
-                    }`}
+                    className={`form-control mt-1`}
                     accept=".mp3"
                     id="sound"
                     onChange={(e) => setSound(e.target.files[0])}
@@ -488,8 +587,9 @@ const NewAnimal = () => {
                     name="animal_habitat"
                     className={`form-control mt-1 textareas-description ${
                       !values.animal_habitat
-                        ? "is-invalid" && animalInfoError !== ""
-                        : ""
+                      && animalInfoError !== ""
+                      ? "is-invalid"
+                      : ""
                     }`}
                     placeholder="Enter Animal Habitat"
                     value={values.animal_habitat}

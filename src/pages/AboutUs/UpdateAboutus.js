@@ -22,7 +22,10 @@ const AboutUsUpdate = () => {
     const [data, setData] = useState("");
     const [per, setPerc] = useState(null);
     const [values, setValues] = useState("");
-
+    const [emailError, setEmailError] =useState("");
+    const [websiteError, setWebsiteError] =useState("");
+    const [descriptionError, setDescriptionError] =useState("");
+    const [addressError, setAddressError] =useState("");
     const docRef = doc(db,'aboutus',abtid);
     
     useEffect(() => {
@@ -44,60 +47,140 @@ const AboutUsUpdate = () => {
 
        //Updating animal
   const UpdateAboutus = (e) => {
-  
-    
-    const imagename = (file.name === undefined || file.name == null || file.name <= 0) ? true : false;
-    console.log(imagename)
-    const storageRef = ref(storage, 'images/'+file.name);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    console.log(imagename)
- 
-    // Create a reference to the file to delete
- 
-    const desertimageRef = ref(storage, data.abt_image);
-
-    if(imagename === false){
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          setPerc(progress);
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-               console.log(data.abt_image)
-              // Delete the file
-              updateDoc(docRef, {
-                abt_image:downloadURL
-             }).then(() => {                
-               deleteObject(desertimageRef)                                
-               }).catch((error) => {
-             // Uh-oh, an error occurred!
-             });
-            });
-      });
+    e.preventDefault();
+    if(!values.abt_email && !values.abt_website && !values.abt_address && !values.abt_description){
+      setEmailError("Please fill out this field.")
+      setWebsiteError("Please fill out this field.")
+      setAddressError("Please fill out this field.")
+      setDescriptionError("Please fill out this field.")
+    }else if (values.abt_email !=="" && !values.abt_website && !values.abt_address && !values.abt_description){
+      setEmailError("")
+      setWebsiteError("Please fill out this field.")
+      setAddressError("Please fill out this field.")
+      setDescriptionError("Please fill out this field.")
+    }else if (!values.abt_email  && values.abt_website!=="" && !values.abt_address && !values.abt_description){
+      setEmailError("Please fill out this field.")
+      setWebsiteError("")
+      setAddressError("Please fill out this field.")
+      setDescriptionError("Please fill out this field.")
+    }else if (!values.abt_email  && !values.abt_website && values.abt_address!=="" && !values.abt_description){
+      setEmailError("Please fill out this field.")
+      setWebsiteError("Please fill out this field.")
+      setAddressError("")
+      setDescriptionError("Please fill out this field.")
+    }else if (!values.abt_email  && !values.abt_website && !values.abt_address && values.abt_description!==""){
+      setEmailError("Please fill out this field.")
+      setWebsiteError("Please fill out this field.")
+      setAddressError("Please fill out this field.")
+      setDescriptionError("")
+    }else if (values.abt_email !=="" && values.abt_website !=="" && !values.abt_address && !values.abt_description){
+      setEmailError("")
+      setWebsiteError("")
+      setAddressError("Please fill out this field.")
+      setDescriptionError("Please fill out this field.")
+    }else if (values.abt_email !=="" && !values.abt_website  && values.abt_address!=="" && !values.abt_description){
+      setEmailError("")
+      setWebsiteError("Please fill out this field.")
+      setAddressError("")
+      setDescriptionError("Please fill out this field.")
+    }else if (values.abt_email !=="" && !values.abt_website  && !values.abt_address && values.abt_description ){
+      setEmailError("")
+      setWebsiteError("Please fill out this field.")
+      setAddressError("Please fill out this field.")
+      setDescriptionError("")
+    }else if (values.abt_email !=="" && values.abt_website !=="" && values.abt_address !=="" && !values.abt_description ){
+      setEmailError("")
+      setWebsiteError("")
+      setAddressError("")
+      setDescriptionError("Please fill out this field.")
+    }else if (values.abt_email !=="" && values.abt_website !=="" && !values.abt_address  && values.abt_description !=="" ){
+      setEmailError("")
+      setWebsiteError("")
+      setAddressError("Please fill out this field.")
+      setDescriptionError("")
+    }else if (values.abt_email !=="" && !values.abt_website  && values.abt_address!==""  && values.abt_description !=="" ){
+      setEmailError("")
+      setWebsiteError("Please fill out this field.")
+      setAddressError("")
+      setDescriptionError("")
+    }else if (!values.abt_email  && values.abt_website!==""  && values.abt_address  && values.abt_description !=="" ){
+      setEmailError("Please fill out this field.")
+      setWebsiteError("")
+      setAddressError("")
+      setDescriptionError("")
     }else{
-      uploadTask.cancel()
+      setEmailError("")
+      setWebsiteError("")
+      setAddressError("")
+      setDescriptionError("")
+
+      if(window.confirm("Do you want to save changes?")){
+        const imagename = (file.name === undefined || file.name == null || file.name <= 0) ? true : false;
+
+        const storageRef = ref(storage, 'images/'+file.name);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+  
+        if(imagename === false){
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log("Upload is " + progress + "% done");
+              setPerc(progress);
+            },
+            (error) => {
+              console.log(error);
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                   console.log(data.abt_image)
+                  // Delete the file
+                  const desertimageRef = ref(storage, data.abt_image);
+                  deleteObject(desertimageRef)    
+                  updateDoc(docRef, {
+                    abt_image:downloadURL
+                 }).then(() => {  
+                  updateDoc(docRef,{
+                    abt_email: String(values.abt_email),
+                    abt_website: String(values.abt_website),
+                    abt_description: String(values.abt_description),
+                    abt_address: String(values.abt_address),
+                  }).then(response => {
+                    alert("Successfully Updated")
+                    navigate("/aboutus");
+                  })
+                    .catch((error) => {
+                    alert(error.message);
+                    });              
+                                               
+                   }).catch((error) => {
+                 // Uh-oh, an error occurred!
+                 });
+                });
+          });
+        }else{
+          uploadTask.cancel();
+          updateDoc(docRef,{
+            abt_email: String(values.abt_email),
+            abt_website: String(values.abt_website),
+            abt_description: String(values.abt_description),
+            abt_address: String(values.abt_address),
+          }).then(response => {
+            alert("Successfully Updated")
+            navigate("/aboutus");
+          })
+            .catch((error) => {
+            alert(error.message);
+            });
+        }
+      }
+      
+
+
     }
+    
    
-    updateDoc(docRef,{
-      abt_email: String(values.abt_email),
-      abt_website: String(values.abt_website),
-      abt_description: String(values.abt_description),
-      abt_address: String(values.abt_address),
-    }).then(response => {
-      alert("Successfully Updated")
-      navigate("/aboutus");
-    })
-      .catch((error) => {
-      alert(error.message);
-      });
-          
    
   };
 
@@ -122,10 +205,11 @@ const AboutUsUpdate = () => {
               type="text"
               name="abt_email"
               placeholder="Enter Email"
-              className="form-control mt-1"
+              className={`form-control mt-1  ${emailError ? 'is-invalid':  ''}`}
               value={values.abt_email} 
               onChange={handleInputChange}
             />
+             <div className="error-text">{emailError}</div>
           </div>
 
           <div className="form-group mt-3">
@@ -133,11 +217,12 @@ const AboutUsUpdate = () => {
             <input
               type="text"
               name="abt_website"
-              className="form-control mt-1"
+              className={`form-control mt-1  ${websiteError ? 'is-invalid':  ''}`}
               placeholder="Enter Website"
               value={values.abt_website} 
               onChange={handleInputChange}
             />
+            <div className="error-text">{websiteError}</div>
           </div>
 
           <div className="form-group mt-3">
@@ -146,10 +231,11 @@ const AboutUsUpdate = () => {
               type="text"
               name="abt_description"
               placeholder="Enter Description"
-              className="form-control mt-1 textareas-desc"
+              className= {`form-control mt-1 textareas-desc ${descriptionError ? 'is-invalid':  ''}`}
               value={values.abt_description} 
               onChange={handleInputChange}
             />
+            <div className="error-text">{descriptionError}</div>
           </div>
 
           <div className="form-group mt-3">
@@ -158,10 +244,11 @@ const AboutUsUpdate = () => {
               type="text"
               name="abt_address"
               placeholder="Enter Address"
-              className="form-control mt-1 textareas-address"
+              className={`form-control mt-1 textareas-address ${addressError ? 'is-invalid':  ''}`}
               value={values.abt_address} 
               onChange={handleInputChange}
             />
+            <div className="error-text">{addressError}</div>
           </div>
           <br></br>
          
@@ -169,6 +256,7 @@ const AboutUsUpdate = () => {
           <input
               type="file"
               name="abt_image"
+              className={`form-control mt-1`}
               accept="image/png, image/jpeg, image/jpg"
               id="file"
               onChange={(e) => setFile(e.target.files[0])}  
@@ -177,7 +265,7 @@ const AboutUsUpdate = () => {
           <br></br>
           <br></br><br></br>
           <div className="editaboutus-btn-add">
-            <button onClick={(e)=>{e.preventDefault(); if(window.confirm("Do you want to save changes?")){UpdateAboutus()}}} className="btn btn-primary-add">
+            <button onClick={UpdateAboutus} className="btn btn-primary-add">
               Save
             </button>
             

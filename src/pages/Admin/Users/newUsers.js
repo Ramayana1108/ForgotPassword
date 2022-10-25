@@ -53,79 +53,79 @@ const NewUser = () => {
     e.preventDefault()
 
     if(!values.first_name && !values.last_name && !values.username && !values.password){
-      setFnameError("Please fill out this field.");
-      setLnameError("Please fill out this field.");
-      setUnameError("Please fill out this field.");
-      setPassError("Please fill out this field.");
+      setFnameError("**Please fill out this field.");
+      setLnameError("**Please fill out this field.");
+      setUnameError("*Please fill out this field.");
+      setPassError("*Please fill out this field.");
     }else if (values.first_name !==""&& !values.last_name && !values.username && !values.password){
       setFnameError("");
-      setLnameError("Please fill out this field.");
-      setUnameError("Please fill out this field.");
-      setPassError("Please fill out this field.");
+      setLnameError("*Please fill out this field.");
+      setUnameError("*Please fill out this field.");
+      setPassError("*Please fill out this field.");
     }else if (values.first_name !==""&& values.last_name!=="" && !values.username && !values.password){
       setFnameError("");
       setLnameError("");
-      setUnameError("Please fill out this field.");
-      setPassError("Please fill out this field.");
+      setUnameError("*Please fill out this field.");
+      setPassError("*Please fill out this field.");
     }else if (values.first_name !==""&& !values.last_name && values.username !=="" && !values.password){
       setFnameError("");
-      setLnameError("Please fill out this field.");
+      setLnameError("*Please fill out this field.");
       setUnameError("");
-      setPassError("Please fill out this field.");
+      setPassError("*Please fill out this field.");
     }else if (values.first_name !==""&& !values.last_name && !values.username && values.password!==""){
       setFnameError("");
-      setLnameError("Please fill out this field.");
-      setUnameError("Please fill out this field.");
+      setLnameError("*Please fill out this field.");
+      setUnameError("*Please fill out this field.");
       setPassError("");
     }else if (values.first_name !==" "&& values.last_name !=="" && values.username !=="" && !values.password){
       setFnameError("");
       setLnameError("");
       setUnameError("");
-      setPassError("Please fill out this field.");
+      setPassError("*Please fill out this field.");
     }else if (values.first_name !==""&& values.last_name !=="" && !values.username  && values.password !==""){
       setFnameError("");
       setLnameError("");
-      setUnameError("Please fill out this field.");
+      setUnameError("*Please fill out this field.");
       setPassError("");
     }else if (values.first_name !==""&& !values.last_name && values.username!=="" && values.password !==""){
       setFnameError("");
-      setLnameError("Please fill out this field.");
+      setLnameError("*Please fill out this field.");
       setUnameError("");
       setPassError("");
     }else if (!values.first_name && values.last_name !=="" && !values.username && !values.password){
-      setFnameError("Please fill out this field.");
+      setFnameError("*Please fill out this field.");
       setLnameError("");
-      setUnameError("Please fill out this field.");
-      setPassError("Please fill out this field.");
+      setUnameError("*Please fill out this field.");
+      setPassError("*Please fill out this field.");
     }else if (!values.first_name && values.last_name !=="" && values.username !=="" && !values.password){
-      setFnameError("Please fill out this field.");
+      setFnameError("*Please fill out this field.");
       setLnameError("");
       setUnameError("");
-      setPassError("Please fill out this field.");
+      setPassError("*Please fill out this field.");
     }else if (!values.first_name && values.last_name !=="" && !values.username && values.password !=="" ){
-      setFnameError("Please fill out this field.");
+      setFnameError("*Please fill out this field.");
       setLnameError("");
-      setUnameError("Please fill out this field.");
+      setUnameError("*Please fill out this field.");
       setPassError("");
     }else if (!values.first_name && values.last_name !=="" && values.username!=="" && values.password !=="" ){
-      setFnameError("Please fill out this field.");
+      setFnameError("*Please fill out this field.");
       setLnameError("");
       setUnameError("");
       setPassError("");
     }else if (!values.first_name && !values.last_name  && values.username!=="" && !values.password  ){
-      setFnameError("Please fill out this field.");
-      setLnameError("Please fill out this field.");
+      setFnameError("*Please fill out this field.");
+      setLnameError("*Please fill out this field.");
       setUnameError("");
-      setPassError("Please fill out this field.");
+      setPassError("*Please fill out this field.");
     }else if (!values.first_name && !values.last_name  && values.username!=="" && values.password !=="" ){
-      setFnameError("Please fill out this field.");
-      setLnameError("Please fill out this field.");
+      setFnameError("*Please fill out this field.");
+      setLnameError("*Please fill out this field.");
       setUnameError("");
       setPassError("");
     }else if (!values.first_name && !values.last_name  && !values.username && values.password !=="" ){
-      setFnameError("Please fill out this field.");
-      setLnameError("Please fill out this field.");
-      setUnameError("Please fill out this field.");
+      setFnameError("*Please fill out this field.");
+      setLnameError("*Please fill out this field.");
+      setUnameError("*Please fill out this field.");
       setPassError("");
     }else{
       setFnameError("");

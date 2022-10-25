@@ -17,13 +17,13 @@ const ResetPassword = () => {
   const [validLink, setValidLink]= useState();
   var date2 = new Date();
   const pathname = window.location.pathname;
-  const id = pathname.substring(15);
+  const id = pathname.substring(15,pathname.length-5);
   const docRef = doc(db,'Users',id);
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(id)
     getDoc(docRef).then((results)=>{
-
        if(date2.getTime()<=results.data().reset_request_date_time){        
         setValidLink(true)
       }else{ 
@@ -39,7 +39,7 @@ const ResetPassword = () => {
     console.log(validLink)
     
     if(!pass){
-      setPassError("No input");
+      setPassError("*Please fill out this field.");
     }else{
       setPassError("");
       if(pass !==""){
@@ -126,7 +126,7 @@ const ResetPassword = () => {
         <div class="center">
           <img src="/images/logo.png" className="loginLogo" />
         </div>
-        <div className="form-floating mt-3">
+        <div className="form-floating mt-3" >
           <h3>Link has expired</h3>
         </div>
       </div>

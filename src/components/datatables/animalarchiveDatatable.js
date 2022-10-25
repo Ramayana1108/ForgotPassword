@@ -95,13 +95,12 @@ const AnimalarchiveDatatable = () => {
     getDoc(docRef).then(doc => {
       const newData = doc.data();      
       const image_url = ref(storage,getPathStorageFromUrl(newData.animal_imageurl));
-      const sound_url = ref(storage,getPathStorageFromUrl(newData.animal_sound));
-        deleteObject(image_url)   
-      
-      if(!sound_url){
+      deleteObject(image_url)   
+      if (newData.animal_sound){
+        const sound_url = ref(storage,getPathStorageFromUrl(newData.animal_sound));
         deleteObject(sound_url)  
       }
-      
+    
     }).then(()=>{    
         deleteDoc(doc(db,"animals/"+animalId+"/animal_quiz/quiz1"));
         deleteDoc(doc(db,"animals/"+animalId+"/animal_quiz/quiz2"));
