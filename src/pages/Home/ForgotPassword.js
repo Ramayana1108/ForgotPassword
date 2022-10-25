@@ -10,11 +10,10 @@ import {
   getDocs,
   deleteDoc,
   doc,
-  onSnapshot,where, query, getDoc
+  onSnapshot,where, query, updateDoc
 } from "firebase/firestore";
 import { db } from "../../services/firebase-config";
-import { async } from "@firebase/util";
-import { FunctionsOutlined } from "@mui/icons-material";
+import { Temporal } from '@js-temporal/polyfill';
 
 const ForgotPassword = () => {
     const [user_email,setUser_Email] = useState();
@@ -22,7 +21,9 @@ const ForgotPassword = () => {
     const [userId, setUserId]= useState("");
     const colRef = collection(db,"Users");
    
-
+    function addMinutes(date, minutes) {
+      return new Date(date.getTime() + minutes*60000);
+  }
 
 
    const navigate = useNavigate();
@@ -51,9 +52,17 @@ const ForgotPassword = () => {
         };
           emailjs.send('service_rbj9nsp', 'template_7eppjnx', templateParams, 'toC84K2tm5N48z4A-')
           .then((result) => {
-            alert("Email Sent").then(()=>{
-              navigate("/")
+            const docRef = doc(db,'Users',  useremail[0].id );
+            const now = new Date().getTime()+ 30*60000;
+            
+            updateDoc(docRef,{
+              reset_request_date_time:now,
+            } ).then(()=>{
+              alert("Email Sent");
+              navigate("/");
             })
+
+          
           }, (error) => {
               console.log(error.text);
           });
