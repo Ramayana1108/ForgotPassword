@@ -27,13 +27,13 @@ const NewQA = () => {
       e.preventDefault();
       
       if (!values.question && !values.answer ){
-        setQError("*Please fill out this field.");
-        setAError("*Please fill out this field.");
+        setQError("Please fill out this field.");
+        setAError("Please fill out this field.");
       }else if(values.question !=="" && !values.answer ){
         setQError("");
-        setAError("*Please fill out this field.");
+        setAError("Please fill out this field.");
       }else if(!values.question  && values.answer !=="" ){
-        setQError("*Please fill out this field.");
+        setQError("Please fill out this field.");
         setAError("");
       }else{
         setQError("");

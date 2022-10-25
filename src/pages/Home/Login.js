@@ -12,7 +12,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
-  onSnapshot,where, query, getDoc, deleteField, updateDoc
+  onSnapshot,where, query, getDoc
 } from "firebase/firestore";
 import { db } from "../../services/firebase-config";
 import { async } from "@firebase/util";
@@ -29,6 +29,9 @@ const Login = () => {
   const role = sessionStorage.getItem("role");
   const [page, setPage] = useState();
 
+
+    
+  const [isSubmitted, setIsSubmitted] = useState(false);
  
   const handleSubmit = async (e)=>{
     e.preventDefault();
@@ -36,13 +39,13 @@ const Login = () => {
     
   if(!uname && !password){
     
-    setUsernameError("*Please fill out this field.");
-    setPasswordError("*Please fill out this field.");
+    setUsernameError("Please fill out this field.");
+    setPasswordError("Please fill out this field.");
    
-  }else if (!uname && password !== ""){setUsernameError("*Please fill out this field."); setPasswordError("");}
+  }else if (!uname && password !== ""){setUsernameError("Please fill out this field."); setPasswordError("");}
   else if(!password && uname !== ""){
     setUsernameError("");
-    setPasswordError("*Please fill out this field.");
+    setPasswordError("Please fill out this field.");
   }
   else{
     
@@ -56,7 +59,6 @@ const Login = () => {
         username: doc.data().username,
         password: doc.data().password,
         role: doc.data().role,
-
       }));     
     }).then(()=>{
       
@@ -73,12 +75,12 @@ const Login = () => {
             }else{
               setPasswordError("Password Match")
               window.sessionStorage.setItem("username", users[0].username);
-              window.sessionStorage.setItem("role", users[0].role);            
-                if (users[0].role === "Staff"){
-                  setPage("/animals");
-                }else{
-                  setPage("/users");
-                }                 
+              window.sessionStorage.setItem("role", users[0].role);
+              if (users[0].role === "Staff"){
+                setPage("/animals");
+              }else{
+                setPage("/users");
+              }
             }
             
           });

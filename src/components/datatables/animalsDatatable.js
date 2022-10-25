@@ -73,7 +73,6 @@ const AnimalDatatable = () => {
   }
 
   const handleArchive= async (animalId) => {
-  
     const docRef = doc(db,'animals',animalId);
    
         updateDoc(docRef,{

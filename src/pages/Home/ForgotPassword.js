@@ -23,37 +23,27 @@ const ForgotPassword = () => {
 
    const navigate = useNavigate();
 
-   function makeid() {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < 5; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
 
    const handleSubmit = async (e)=>{
     e.preventDefault();
+
       if(!user_email){
-        setEmailError("*Please fill out this field.");
+        setEmailError("There is no input");
       }else{
         const q = query(colRef, where("email","==",user_email));  
         let useremail= [];
         getDocs(q).then(async (response) => {
           useremail = await response.docs.map((doc) => ({
           email: doc.data().email,
-          name: doc.data().first_name,
           id: doc.id      
         }));     
       }).then(()=>{
         if(useremail[0].email === 0){
-          setEmailError("*Email does not exist or is not an administrator");
+          setEmailError("email does not exist or is not an administrator");
         }else{
           var templateParams = {
             user_email: useremail[0].email,
-            name: useremail[0].name,
-            link:  "http://localhost:3000/resetpassword/"+ useremail[0].id + makeid()
+            link:  "http://localhost:3000/resetpassword/"+ useremail[0].id
         };
           emailjs.send('service_rbj9nsp', 'template_7eppjnx', templateParams, 'toC84K2tm5N48z4A-')
           .then((result) => {

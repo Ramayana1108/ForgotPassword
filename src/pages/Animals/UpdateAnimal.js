@@ -1,7 +1,7 @@
 import { db, storage  } from "../../services/firebase-config";
 import React,{useState, useEffect} from "react";
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { collection, query, where,getDocs, doc, getDoc,updateDoc, QuerySnapshot,onSnapshot, setDoc,deleteDoc } from "firebase/firestore";
+import { collection, query, where,getDocs, doc, getDoc,updateDoc, QuerySnapshot,onSnapshot, setDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL,getStorage,deleteObject  } from "firebase/storage";
 import 'firebase/firestore';
 import "./UpdateAnimal.scss";
@@ -33,21 +33,6 @@ const  UpdateAnimal = () => {
   const docRef = doc(db,'animals',aid);
   const subdocRef = collection(db,'animals',aid,"animal_quiz");
 
-   const getPathStorageFromUrl=(url)=>{
-
-    const baseUrl = "https://firebasestorage.googleapis.com/v0/b/manilazooproject.appspot.com/o/";
-  
-     url = url.replace(baseUrl,""); 
-  
-    let index = url.indexOf("?")
-  
-    url = url.substring(0,index);
-    
-    url = url.replace("%2F","/");
-  
-    return url;
-  }
-
   
   const checkAnimalInfo = () =>{
     if( !values.animal_name  || !values.animal_sciname ||! values.animal_enclosure ||
@@ -59,32 +44,6 @@ const  UpdateAnimal = () => {
         return false
        }
   }
-  const checkAnimalQuizforNull = () => {
-    if (
-      !quiz1.question &&
-      !quiz1.choicea &&
-      !quiz1.choiceb &&
-      !quiz1.choicec &&
-      !quiz1.answer &&
-      !quiz1.explanation &&
-      !quiz2.question &&
-      !quiz2.choicea &&
-      !quiz2.choiceb &&
-      !quiz2.choicec &&
-      !quiz2.answer &&
-      !quiz2.explanation &&
-      !quiz3.question &&
-      !quiz3.choicea &&
-      !quiz3.choiceb &&
-      !quiz3.choicec &&
-      !quiz3.answer &&
-      !quiz3.explanation
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
   const checkAnimalQuiz = () => {
 
@@ -147,7 +106,6 @@ const  UpdateAnimal = () => {
     });
   };
     const handleInputChangeQuiz1 = (e) => {
-      setQuizError("");
     const { name, value } = e.target;
     setQuiz1({
       ...quiz1,
@@ -155,7 +113,6 @@ const  UpdateAnimal = () => {
     });
   };
   const handleInputChangeQuiz2 = (e) => {
-    setQuizError("");
     const { name, value } = e.target;
     setQuiz2({
       ...quiz2,
@@ -163,7 +120,6 @@ const  UpdateAnimal = () => {
     });
   };
   const handleInputChangeQuiz3 = (e) => {
-    setQuizError("");
     const { name, value } = e.target;
     setQuiz3({
       ...quiz3,
@@ -174,683 +130,182 @@ const  UpdateAnimal = () => {
   //Updating animal
   const UpdateAnimal = (e) => {
     e.preventDefault();
-    if(checkAnimalInfo() === true){
+
+    if( checkAnimalInfo() === true && checkAnimalQuiz() === true){
       setAnimalInfoError("*All animal information fields are required");
-    }else {
+      setQuizError("*All Animal Quiz Fields are required");
+    }else if( checkAnimalInfo() === false  && checkAnimalQuiz() === true ){
       setAnimalInfoError("");
-      const imagename = (file.name === undefined || file.name == null || file.name <= 0) ? true : false;
-      const soundname = (sound.name === undefined || sound.name == null || sound.name <= 0) ? true : false;
-      console.log(imagename)
-      console.log(soundname)
-      if(checkAnimalQuizforNull()=== true){
-        setQuizError("");
-        if(window.confirm("Do you want to save changes?")){
+      setQuizError("*All Animal Quiz Fields are required");
+    }else if( checkAnimalInfo() === true && checkAnimalQuiz() === false ){
+      setAnimalInfoError("*All animal information fields are required");
+      setQuizError("");
+    }else{
+      setAnimalInfoError("");
+      setQuizError("");
+
+      if(window.confirm("Do you want to save changes?")){
+        const imagename = (file.name === undefined || file.name == null || file.name <= 0) ? true : false;
+        const soundname = (sound.name === undefined || sound.name == null || sound.name <= 0) ? true : false;
+    
+    
+        const storageRef = ref(storage, 'images/'+file.name);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+    
+        const storageRef2 = ref(storage, 'sound/'+sound.name);
+        const uploadTask2 = uploadBytesResumable(storageRef2, sound);
         
-          deleteDoc(doc(db,"animals/"+aid+"/animal_quiz/quiz1"));
-          deleteDoc(doc(db,"animals/"+aid+"/animal_quiz/quiz2"));
-          deleteDoc(doc(db,"animals/"+aid+"/animal_quiz/quiz3"));
-      
-          const storageRef = ref(storage, 'images/'+file.name);
-          const uploadTask = uploadBytesResumable(storageRef, file);
-      
-          const storageRef2 = ref(storage, 'sound/'+sound.name);
-          const uploadTask2 = uploadBytesResumable(storageRef2, sound);
-                
-          if(imagename === false || soundname ===false) {
-            if(imagename === false){
-              uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                  const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                  console.log("Upload is " + progress + "% done");
-                  setPerc(progress);
-                },
-                (error) => {
-                  console.log(error);
-                },
-                () => {
-                  getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                       console.log(data.animal_imageurl)
-                      // Delete the file
-                      const imageURL=ref(storage,getPathStorageFromUrl(data.animal_imageurl))
-                       deleteObject(imageURL)
-                        updateDoc(docRef, {
-                          animal_imageurl:downloadURL
-                       }).then(()=>{
+        // Create a reference to the file to delete
+        const desertsoundRef = ref(storage, data.animal_sound);
+        const desertimageRef = ref(storage, data.animal_imageurl);
     
-                        if(soundname === false ){
-                            uploadTask2.on(
-                              "state_changed",
-                              (snapshot) => {
-                                const progress =
-                                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                                console.log("Upload is " + progress + "% done");
-                                setPerc2(progress);
-                              },
-                              (error) => {
-                                console.log(error);
-                              },
-                              () => {
-                                getDownloadURL(uploadTask2.snapshot.ref).then((downloadURL) => {
-                                     console.log(data.animal_sound)
-                                    // Delete the file
-                                    if(data.animal_sound){
-                                      const sound_url = ref(storage,getPathStorageFromUrl(data.animal_sound))
-                                      deleteObject(sound_url)
-                                    }
-                                      updateDoc(docRef, {
-                                        animal_sound:downloadURL
-                                     }).then(()=>{
-                                        updateDoc(docRef, {
-                                            animal_name:values.animal_name,
-                                            animal_sciname:values.animal_sciname,
-                                            animal_enclosure:values.animal_enclosure,
-                                            animal_habitat:values.animal_habitat,
-                                            animal_description:values.animal_description,
-                                            animal_conservationstatus:values.animal_conservationstatus,
-                                            animal_behavior:values.animal_behavior,
-                                            animal_diet:values.animal_diet,
-                                            animal_distribution:values.animal_distribution,
-                                            animal_nutrition:values.animal_nutrition,
-                                            }).then(()=>{
-                                                alert('Animal Updated' );
-                                                navigate("/animals")
-                                            });
-                                        }).catch((error) => {
-                                            // Uh-oh, an error occurred!
-                                            });                                
-                                    
-                                  });
-                            });
-                      
-                          }else{
-                            uploadTask2.cancel()
-                            updateDoc(docRef, {
-                                animal_name:values.animal_name,
-                                animal_sciname:values.animal_sciname,
-                                animal_enclosure:values.animal_enclosure,
-                                animal_habitat:values.animal_habitat,
-                                animal_description:values.animal_description,
-                                animal_conservationstatus:values.animal_conservationstatus,
-                                animal_behavior:values.animal_behavior,
-                                animal_diet:values.animal_diet,
-                                animal_distribution:values.animal_distribution,
-                                animal_nutrition:values.animal_nutrition,
-                                }).then(()=>{
-                                    alert('Animal Updated' );
-                                    navigate("/animals")
-                                });
-                          }
-    
-                            }).catch((error) => {
-                            // Uh-oh, an error occurred!
-                            });                                
-                     
-                    });
-              });
-
-
-            }else{
-              uploadTask.cancel()
-    
-              if(soundname === false ){
-                uploadTask2.on(
-                  "state_changed",
-                  (snapshot) => {
-                    const progress =
-                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log("Upload is " + progress + "% done");
-                    setPerc2(progress);
-                  },
-                  (error) => {
-                    console.log(error);
-                  },
-                  () => {
-                    getDownloadURL(uploadTask2.snapshot.ref).then((downloadURL) => {
-                      
-                        // Delete the file
-                        if(data.animal_sound){
-                          const sound_url = ref(storage,getPathStorageFromUrl(data.animal_sound))
-                          deleteObject(sound_url)
-                        }
-                          updateDoc(docRef, {
-                            animal_sound:downloadURL
-                         }).then(()=>{
-                            updateDoc(docRef, {
-                                animal_name:values.animal_name,
-                                animal_sciname:values.animal_sciname,
-                                animal_enclosure:values.animal_enclosure,
-                                animal_habitat:values.animal_habitat,
-                                animal_description:values.animal_description,
-                                animal_conservationstatus:values.animal_conservationstatus,
-                                animal_behavior:values.animal_behavior,
-                                animal_diet:values.animal_diet,
-                                animal_distribution:values.animal_distribution,
-                                animal_nutrition:values.animal_nutrition,
-                                }).then(()=>{
-                                    alert('Animal Updated' );
-                                    navigate("/animals")
-                                });
-                            }).catch((error) => {
-                                // Uh-oh, an error occurred!
-                                });                                
-                       
-                      });
+        if(imagename === false){
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log("Upload is " + progress + "% done");
+              setPerc(progress);
+            },
+            (error) => {
+              console.log(error);
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                   console.log(data.animal_imageurl)
+                  // Delete the file
+                   deleteObject(desertimageRef).then(() => {   
+                    updateDoc(docRef, {
+                      animal_imageurl:downloadURL
+                   });                                
+                   }).catch((error) => {
+                 // Uh-oh, an error occurred!
+                 });
                 });
-          
-              }else{
-                uploadTask2.cancel()
-                updateDoc(docRef, {
-                    animal_name:values.animal_name,
-                    animal_sciname:values.animal_sciname,
-                    animal_enclosure:values.animal_enclosure,
-                    animal_habitat:values.animal_habitat,
-                    animal_description:values.animal_description,
-                    animal_conservationstatus:values.animal_conservationstatus,
-                    animal_behavior:values.animal_behavior,
-                    animal_diet:values.animal_diet,
-                    animal_distribution:values.animal_distribution,
-                    animal_nutrition:values.animal_nutrition,
-                    }).then(()=>{
-                        alert('Animal Updated' );
-                        navigate("/animals")
-                    });
-              }
-    
-              
-            }
-        
-            
-          }else{
-            updateDoc(docRef, {
-                animal_name:values.animal_name,
-                animal_sciname:values.animal_sciname,
-                animal_enclosure:values.animal_enclosure,
-                animal_habitat:values.animal_habitat,
-                animal_description:values.animal_description,
-                animal_conservationstatus:values.animal_conservationstatus,
-                animal_behavior:values.animal_behavior,
-                animal_diet:values.animal_diet,
-                animal_distribution:values.animal_distribution,
-                animal_nutrition:values.animal_nutrition,
-                }).then(()=>{
-                    alert('Animal Updated' );
-                    navigate("/animals")
-                });
-          }
-         
-
-        
-          }
-      }else{
-        if (checkAnimalQuiz() === true){
-          setQuizError("*All Animal Quiz Fields are required");
+          });
         }else{
-          setQuizError("");
-
-          if(window.confirm("Do you want to save changes?")){
-        
-            deleteDoc(doc(db,"animals/"+aid+"/animal_quiz/quiz1"));
-            deleteDoc(doc(db,"animals/"+aid+"/animal_quiz/quiz2"));
-            deleteDoc(doc(db,"animals/"+aid+"/animal_quiz/quiz3"));
-        
-            const storageRef = ref(storage, 'images/'+file.name);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-        
-            const storageRef2 = ref(storage, 'sound/'+sound.name);
-            const uploadTask2 = uploadBytesResumable(storageRef2, sound);
-                  
-            if(imagename === false || soundname ===false) {
-              if(imagename === false){
-                uploadTask.on(
-                  "state_changed",
-                  (snapshot) => {
-                    const progress =
-                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log("Upload is " + progress + "% done");
-                    setPerc(progress);
-                  },
-                  (error) => {
-                    console.log(error);
-                  },
-                  () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                         console.log(data.animal_imageurl)
-                        // Delete the file
-                        const imageURL=ref(storage,getPathStorageFromUrl(data.animal_imageurl))
-                         deleteObject(imageURL)
-                          updateDoc(docRef, {
-                            animal_imageurl:downloadURL
-                         }).then(()=>{
-        
-                          if(soundname === false ){
-                              uploadTask2.on(
-                                "state_changed",
-                                (snapshot) => {
-                                  const progress =
-                                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                                  console.log("Upload is " + progress + "% done");
-                                  setPerc2(progress);
-                                },
-                                (error) => {
-                                  console.log(error);
-                                },
-                                () => {
-                                  getDownloadURL(uploadTask2.snapshot.ref).then((downloadURL) => {
-                                       console.log(data.animal_sound)
-                                      // Delete the file
-                                      if(data.animal_sound){
-                                        const sound_url = ref(storage,getPathStorageFromUrl(data.animal_sound))
-                                        deleteObject(sound_url)
-                                      }
-                                        updateDoc(docRef, {
-                                          animal_sound:downloadURL
-                                       }).then(()=>{
-                                          updateDoc(docRef, {
-                                              animal_name:values.animal_name,
-                                              animal_sciname:values.animal_sciname,
-                                              animal_enclosure:values.animal_enclosure,
-                                              animal_habitat:values.animal_habitat,
-                                              animal_description:values.animal_description,
-                                              animal_conservationstatus:values.animal_conservationstatus,
-                                              animal_behavior:values.animal_behavior,
-                                              animal_diet:values.animal_diet,
-                                              animal_distribution:values.animal_distribution,
-                                              animal_nutrition:values.animal_nutrition,
-                                              }).then(()=>{
-                                                const q1Ref = doc(db, "animals", aid,"animal_quiz","quiz1");
-                                                setDoc(q1Ref,{
-                                                  question: String(quiz1.question),
-                                                  choicea: String(quiz1.choicea),
-                                                  choiceb: String(quiz1.choiceb),
-                                                  choicec: String(quiz1.choicec),
-                                                  answer: String(quiz1.answer),
-                                                  explanation: String(quiz1.explanation)
-                                                }).then(() => {
-                                                  //quiz2
-                                                  const q2Ref = doc(db, "animals", aid,"animal_quiz","quiz2");
-                                                  setDoc(q2Ref,{
-                                                    question: String(quiz2.question),
-                                                    choicea: String(quiz2.choicea),
-                                                    choiceb: String(quiz2.choiceb),
-                                                    choicec: String(quiz2.choicec),
-                                                    answer: String(quiz2.answer),
-                                                    explanation: String(quiz2.explanation)
-                                                  }).then(() => {
-                                                    //quiz3
-                                                    const q3Ref = doc(db, "animals", aid,"animal_quiz","quiz3");
-                                                    setDoc(q3Ref,{
-                                                      question: String(quiz3.question),
-                                                      choicea: String(quiz3.choicea),
-                                                      choiceb: String(quiz3.choiceb),
-                                                      choicec: String(quiz3.choicec),
-                                                      answer: String(quiz3.answer),
-                                                      explanation: String(quiz3.explanation)
-                                                    }).then(() => {
-                                                         
-                                                          alert('Animal Updated' );
-                                                          navigate("/animals")
-                                              
-                                                    })
-                                                    .catch((error) => {
-                                                    alert(error.message);
-                                                    });
-                                        
-                                                    //end of 3rd quiz
-                                                   
-                                              
-                                                  })
-                                                  .catch((error) => {
-                                                    alert(error.message);
-                                                  });
-                                        
-                                                //end of 2nd quiz     
-                                                   
-                                              
-                                                })
-                                                .catch((error) => {
-                                                  alert(error.message);
-                                                });
-                                              });
-                                          }).catch((error) => {
-                                              // Uh-oh, an error occurred!
-                                              });                                
-                                      
-                                    });
-                              });
-                        
-                            }else{
-                              uploadTask2.cancel()
-                              updateDoc(docRef, {
-                                  animal_name:values.animal_name,
-                                  animal_sciname:values.animal_sciname,
-                                  animal_enclosure:values.animal_enclosure,
-                                  animal_habitat:values.animal_habitat,
-                                  animal_description:values.animal_description,
-                                  animal_conservationstatus:values.animal_conservationstatus,
-                                  animal_behavior:values.animal_behavior,
-                                  animal_diet:values.animal_diet,
-                                  animal_distribution:values.animal_distribution,
-                                  animal_nutrition:values.animal_nutrition,
-                                  }).then(()=>{
-                                    const q1Ref = doc(db, "animals", aid,"animal_quiz","quiz1");
-                                    setDoc(q1Ref,{
-                                      question: String(quiz1.question),
-                                      choicea: String(quiz1.choicea),
-                                      choiceb: String(quiz1.choiceb),
-                                      choicec: String(quiz1.choicec),
-                                      answer: String(quiz1.answer),
-                                      explanation: String(quiz1.explanation)
-                                    }).then(() => {
-                                      //quiz2
-                                      const q2Ref = doc(db, "animals", aid,"animal_quiz","quiz2");
-                                      setDoc(q2Ref,{
-                                        question: String(quiz2.question),
-                                        choicea: String(quiz2.choicea),
-                                        choiceb: String(quiz2.choiceb),
-                                        choicec: String(quiz2.choicec),
-                                        answer: String(quiz2.answer),
-                                        explanation: String(quiz2.explanation)
-                                      }).then(() => {
-                                        //quiz3
-                                        const q3Ref = doc(db, "animals", aid,"animal_quiz","quiz3");
-                                        setDoc(q3Ref,{
-                                          question: String(quiz3.question),
-                                          choicea: String(quiz3.choicea),
-                                          choiceb: String(quiz3.choiceb),
-                                          choicec: String(quiz3.choicec),
-                                          answer: String(quiz3.answer),
-                                          explanation: String(quiz3.explanation)
-                                        }).then(() => {
-                                             
-                                              alert('Animal Updated' );
-                                              navigate("/animals")
-                                  
-                                        })
-                                        .catch((error) => {
-                                        alert(error.message);
-                                        });
-                            
-                                        //end of 3rd quiz
-                                       
-                                  
-                                      })
-                                      .catch((error) => {
-                                        alert(error.message);
-                                      });
-                            
-                                    //end of 2nd quiz     
-                                       
-                                  
-                                    })
-                                    .catch((error) => {
-                                      alert(error.message);
-                                    });
-                                  });
-                            }
-        
-                              }).catch((error) => {
-                              // Uh-oh, an error occurred!
-                              });                                
-                       
-                      });
-                });
-        
-        
-              }else{
-                uploadTask.cancel()
-        
-                if(soundname === false ){
-                  uploadTask2.on(
-                    "state_changed",
-                    (snapshot) => {
-                      const progress =
-                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                      console.log("Upload is " + progress + "% done");
-                      setPerc2(progress);
-                    },
-                    (error) => {
-                      console.log(error);
-                    },
-                    () => {
-                      getDownloadURL(uploadTask2.snapshot.ref).then((downloadURL) => {
-                        
-                          // Delete the file
-                          if(data.animal_sound){
-                            const sound_url = ref(storage,getPathStorageFromUrl(data.animal_sound))
-                            deleteObject(sound_url)
-                          }
-                            updateDoc(docRef, {
-                              animal_sound:downloadURL
-                           }).then(()=>{
-                              updateDoc(docRef, {
-                                  animal_name:values.animal_name,
-                                  animal_sciname:values.animal_sciname,
-                                  animal_enclosure:values.animal_enclosure,
-                                  animal_habitat:values.animal_habitat,
-                                  animal_description:values.animal_description,
-                                  animal_conservationstatus:values.animal_conservationstatus,
-                                  animal_behavior:values.animal_behavior,
-                                  animal_diet:values.animal_diet,
-                                  animal_distribution:values.animal_distribution,
-                                  animal_nutrition:values.animal_nutrition,
-                                  }).then(()=>{
-                                    const q1Ref = doc(db, "animals", aid,"animal_quiz","quiz1");
-                                    setDoc(q1Ref,{
-                                      question: String(quiz1.question),
-                                      choicea: String(quiz1.choicea),
-                                      choiceb: String(quiz1.choiceb),
-                                      choicec: String(quiz1.choicec),
-                                      answer: String(quiz1.answer),
-                                      explanation: String(quiz1.explanation)
-                                    }).then(() => {
-                                      //quiz2
-                                      const q2Ref = doc(db, "animals", aid,"animal_quiz","quiz2");
-                                      setDoc(q2Ref,{
-                                        question: String(quiz2.question),
-                                        choicea: String(quiz2.choicea),
-                                        choiceb: String(quiz2.choiceb),
-                                        choicec: String(quiz2.choicec),
-                                        answer: String(quiz2.answer),
-                                        explanation: String(quiz2.explanation)
-                                      }).then(() => {
-                                        //quiz3
-                                        const q3Ref = doc(db, "animals", aid,"animal_quiz","quiz3");
-                                        setDoc(q3Ref,{
-                                          question: String(quiz3.question),
-                                          choicea: String(quiz3.choicea),
-                                          choiceb: String(quiz3.choiceb),
-                                          choicec: String(quiz3.choicec),
-                                          answer: String(quiz3.answer),
-                                          explanation: String(quiz3.explanation)
-                                        }).then(() => {
-                                             
-                                              alert('Animal Updated' );
-                                              navigate("/animals")
-                                  
-                                        })
-                                        .catch((error) => {
-                                        alert(error.message);
-                                        });
-                            
-                                        //end of 3rd quiz
-                                       
-                                  
-                                      })
-                                      .catch((error) => {
-                                        alert(error.message);
-                                      });
-                            
-                                    //end of 2nd quiz     
-                                       
-                                  
-                                    })
-                                    .catch((error) => {
-                                      alert(error.message);
-                                    });
-                                  });
-                              }).catch((error) => {
-                                  // Uh-oh, an error occurred!
-                                  });                                
-                         
-                        });
-                  });
-            
-                }else{
-                  uploadTask2.cancel()
-                  updateDoc(docRef, {
-                      animal_name:values.animal_name,
-                      animal_sciname:values.animal_sciname,
-                      animal_enclosure:values.animal_enclosure,
-                      animal_habitat:values.animal_habitat,
-                      animal_description:values.animal_description,
-                      animal_conservationstatus:values.animal_conservationstatus,
-                      animal_behavior:values.animal_behavior,
-                      animal_diet:values.animal_diet,
-                      animal_distribution:values.animal_distribution,
-                      animal_nutrition:values.animal_nutrition,
-                      }).then(()=>{
-                        const q1Ref = doc(db, "animals", aid,"animal_quiz","quiz1");
-                        setDoc(q1Ref,{
-                          question: String(quiz1.question),
-                          choicea: String(quiz1.choicea),
-                          choiceb: String(quiz1.choiceb),
-                          choicec: String(quiz1.choicec),
-                          answer: String(quiz1.answer),
-                          explanation: String(quiz1.explanation)
-                        }).then(() => {
-                          //quiz2
-                          const q2Ref = doc(db, "animals", aid,"animal_quiz","quiz2");
-                          setDoc(q2Ref,{
-                            question: String(quiz2.question),
-                            choicea: String(quiz2.choicea),
-                            choiceb: String(quiz2.choiceb),
-                            choicec: String(quiz2.choicec),
-                            answer: String(quiz2.answer),
-                            explanation: String(quiz2.explanation)
-                          }).then(() => {
-                            //quiz3
-                            const q3Ref = doc(db, "animals", aid,"animal_quiz","quiz3");
-                            setDoc(q3Ref,{
-                              question: String(quiz3.question),
-                              choicea: String(quiz3.choicea),
-                              choiceb: String(quiz3.choiceb),
-                              choicec: String(quiz3.choicec),
-                              answer: String(quiz3.answer),
-                              explanation: String(quiz3.explanation)
-                            }).then(() => {
-                                 
-                                  alert('Animal Updated' );
-                                  navigate("/animals")
-                      
-                            })
-                            .catch((error) => {
-                            alert(error.message);
-                            });
-                
-                            //end of 3rd quiz
-                           
-                      
-                          })
-                          .catch((error) => {
-                            alert(error.message);
-                          });
-                
-                        //end of 2nd quiz     
-                           
-                      
-                        })
-                        .catch((error) => {
-                          alert(error.message);
-                        });
-                      });
-                }
-        
-                
-              }
-          
-              
-            }else{
-              updateDoc(docRef, {
-                  animal_name:values.animal_name,
-                  animal_sciname:values.animal_sciname,
-                  animal_enclosure:values.animal_enclosure,
-                  animal_habitat:values.animal_habitat,
-                  animal_description:values.animal_description,
-                  animal_conservationstatus:values.animal_conservationstatus,
-                  animal_behavior:values.animal_behavior,
-                  animal_diet:values.animal_diet,
-                  animal_distribution:values.animal_distribution,
-                  animal_nutrition:values.animal_nutrition,
-                  }).then(()=>{
-                    const q1Ref = doc(db, "animals", aid,"animal_quiz","quiz1");
-                    setDoc(q1Ref,{
-                      question: String(quiz1.question),
-                      choicea: String(quiz1.choicea),
-                      choiceb: String(quiz1.choiceb),
-                      choicec: String(quiz1.choicec),
-                      answer: String(quiz1.answer),
-                      explanation: String(quiz1.explanation)
-                    }).then(() => {
-                      //quiz2
-                      const q2Ref = doc(db, "animals", aid,"animal_quiz","quiz2");
-                      setDoc(q2Ref,{
-                        question: String(quiz2.question),
-                        choicea: String(quiz2.choicea),
-                        choiceb: String(quiz2.choiceb),
-                        choicec: String(quiz2.choicec),
-                        answer: String(quiz2.answer),
-                        explanation: String(quiz2.explanation)
-                      }).then(() => {
-                        //quiz3
-                        const q3Ref = doc(db, "animals", aid,"animal_quiz","quiz3");
-                        setDoc(q3Ref,{
-                          question: String(quiz3.question),
-                          choicea: String(quiz3.choicea),
-                          choiceb: String(quiz3.choiceb),
-                          choicec: String(quiz3.choicec),
-                          answer: String(quiz3.answer),
-                          explanation: String(quiz3.explanation)
-                        }).then(() => {
-                             
-                              alert('Animal Updated' );
-                              navigate("/animals")
-                  
-                        })
-                        .catch((error) => {
-                        alert(error.message);
-                        });
-            
-                        //end of 3rd quiz
-                       
-                  
-                      })
-                      .catch((error) => {
-                        alert(error.message);
-                      });
-            
-                    //end of 2nd quiz     
-                       
-                  
-                    })
-                    .catch((error) => {
-                      alert(error.message);
-                    });
-                  });
-            }
-           
-        
-          
-            }
-        
+          uploadTask.cancel()
         }
+    
+        if(soundname === false ){
+          uploadTask2.on(
+            "state_changed",
+            (snapshot) => {
+              const progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log("Upload is " + progress + "% done");
+              setPerc2(progress);
+            },
+            (error) => {
+              console.log(error);
+            },
+            () => {
+              getDownloadURL(uploadTask2.snapshot.ref).then((downloadURL) => {
+                   console.log(data.animal_sound)
+                  // Delete the file
+                   deleteObject(desertsoundRef).then(() => {   
+                    updateDoc(docRef, {
+                      animal_sound:downloadURL
+                   });                                
+                   }).catch((error) => {
+                 // Uh-oh, an error occurred!
+                 });
+                });
+          });
+    
+        }else{
+          uploadTask2.cancel()
+        }
+    
+        console.log(soundname)
+        console.log(imagename)
+        updateDoc(docRef, {
+          animal_name:values.animal_name,
+          animal_sciname:values.animal_sciname,
+          animal_enclosure:values.animal_enclosure,
+          animal_habitat:values.animal_habitat,
+          animal_description:values.animal_description,
+          animal_conservationstatus:values.animal_conservationstatus,
+          animal_behavior:values.animal_behavior,
+          animal_diet:values.animal_diet,
+          animal_distribution:values.animal_distribution,
+          animal_nutrition:values.animal_nutrition,
+          })
+          .then(() => {
+            const q1Ref = doc(db, "animals", values.animal_name,"animal_quiz","quiz1");
+            setDoc(q1Ref,{
+              question: String(quiz1.question),
+              choicea: String(quiz1.choicea),
+              choiceb: String(quiz1.choiceb),
+              choicec: String(quiz1.choicec),
+              answer: String(quiz1.answer),
+              explanation: String(quiz1.explanation)
+            }).then(() => {
+              //quiz2
+              const q2Ref = doc(db, "animals", values.animal_name,"animal_quiz","quiz2");
+              setDoc(q2Ref,{
+                question: String(quiz2.question),
+                choicea: String(quiz2.choicea),
+                choiceb: String(quiz2.choiceb),
+                choicec: String(quiz2.choicec),
+                answer: String(quiz2.answer),
+                explanation: String(quiz2.explanation)
+              }).then(() => {
+                //quiz3
+                const q3Ref = doc(db, "animals", values.animal_name,"animal_quiz","quiz3");
+                setDoc(q3Ref,{
+                  question: String(quiz3.question),
+                  choicea: String(quiz3.choicea),
+                  choiceb: String(quiz3.choiceb),
+                  choicec: String(quiz3.choicec),
+                  answer: String(quiz3.answer),
+                  explanation: String(quiz3.explanation)
+                }).then(() => {
+                     
+                      alert('Animal Updated' );
+                      navigate("/animals")
+          
+                })
+                .catch((error) => {
+                alert(error.message);
+                });
+    
+                //end of 3rd quiz
+               
+          
+              })
+              .catch((error) => {
+                alert(error.message);
+              });
+    
+            //end of 2nd quiz     
+               
+          
+            })
+            .catch((error) => {
+              alert(error.message);
+            });
+    
+          //end of first quiz      
+          // alert('Updated' );
+          // navigate("/animals")
+          })
+          .catch((error) => {
+          alert(error.message);
+          });
+            
+    
+    
+        }
+       
+        
       }
-    }
-    
-    
+
    
-  }
+   
+   
+  };
   
 
   //cancel Button
@@ -863,7 +318,7 @@ const  UpdateAnimal = () => {
 return (
   <div>
   <NavWrapper>
-    <h1 class="registerTitle">Edit Animal</h1>
+    <h1 class="registerTitle">New Animal</h1>
     <div className="Auth-form-container-add">
       <form className="Auth-form-animal">
         <div className="Auth-form-content-animal">
