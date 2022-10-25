@@ -5,11 +5,8 @@ import { collection, query, where,getDocs, doc, getDoc,updateDoc, QuerySnapshot,
 import { db } from "../../services/firebase-config";
 import validator from 'validator';
 import bcrypt, { compare } from 'bcryptjs';
-import { Temporal } from '@js-temporal/polyfill';
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import { ImFileText } from "react-icons/im";
-import { FirebaseError } from "firebase/app";
+
 
 
 const ResetPassword = () => {
@@ -17,9 +14,7 @@ const ResetPassword = () => {
   const [repass, setRepass]= useState("")
   const [passError, setPassError]= useState("")
   const [repassError, setRepassError]= useState("")
-  const [resetDate, setResetDate]=useState("")
-  const [today,setToday]=useState("")
-  const [validLink, setValidLink]= useState(true);
+  const [validLink, setValidLink]= useState();
   var date2 = new Date();
   const pathname = window.location.pathname;
   const id = pathname.substring(15);
